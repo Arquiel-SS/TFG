@@ -1,13 +1,17 @@
-const db = require('../db/connection');
+const pool = require('../db/connection');
 
-async function getAll() {
-    const [rows] = await db.query('SELECT * FROM Usuario LIMIT 100');
-    return rows;
-}
+exports.crearUsuario = async (username, email, passwordHash) => {
+    const [result] = await pool.query(
+        "INSERT INTO Usuario (username, email, password_hash) VALUES (?, ?, ?)",
+        [username, email, passwordHash]
+    );
+    return result;
+};
 
-async function getById(id) {
-    const [rows] = await db.query('SELECT * FROM Usuario WHERE id = ?', [id]);
+exports.buscarPorEmail = async (email) => {
+    const [rows] = await pool.query(
+        "SELECT * FROM Usuario WHERE email = ?",
+        [email]
+    );
     return rows[0];
-}
-
-module.exports = { getAll, getById };
+};

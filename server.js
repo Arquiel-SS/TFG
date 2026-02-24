@@ -1,12 +1,21 @@
 const express = require('express');
 const path = require('path');
+const app = express();
+const PORT = 3000;
 
 // Rutas
 const juegoRoutes = require('./src/routes/juegoRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
+const authRoutes = require('./src/routes/authRoutes');
+const authMiddleware = require('./src/middleware/authMiddleware');
 
-const app = express();
-const PORT = 3000;
+app.get('/api/protegido', authMiddleware, (req, res) => {
+    res.json({
+        message: "Acceso concedido",
+        usuario: req.usuario
+    });
+});
+
 
 // Middlewares
 app.use(express.json());
@@ -15,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Rutas API
 app.use('/api/juegos', juegoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/auth', authRoutes);
 
 // Ruta principal
 app.get('/', (req, res) => {
