@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard - Catálogo de Videojuegos</title>
+</head>
+<body>
+    <h2>Catálogo de Videojuegos</h2>
+    <button id="logout">Cerrar sesión</button>
+    <div id="juegos"></div>
+
+    <script>
+        const contenedor = document.getElementById("juegos");
+
+        // Función para cargar juegos desde el backend
+        async function cargarJuegos() {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                alert('No estás autenticado');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/juegos", {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('No autorizado o error en la API');
+                }
+
+                const juegos = await response.json();
+                contenedor.innerHTML = "";
+
+                juegos.forEach(juego => {
+                    contenedor.innerHTML += `
+                        <div style="border:1px solid black; padding:10px; margin:10px;">
+                            <h3>${juego.titulo}</h3>
+                            <p><strong>Género:</strong> ${juego.genero}</p>
+                            <p><strong>Plataforma:</strong> ${juego.plataforma}</p>
+                            <p><strong>Desarrollador:</strong> ${juego.desarrollador}</p>
+                            <p><strong>Fecha de lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
+                            <p>${juego.descripcion}</p>
+                            ${juego.portada_url ? `<img src="${juego.portada_url}" alt="${juego.titulo}" style="max-width:150px;">` : ""}
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                contenedor.innerHTML = '<p style="color:red;">Error al cargar los juegos</p>';
+                console.error(err);
+            }
+        }
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        });
+
+        // Cargar los juegos al abrir la página
+        cargarJuegos();
+    </script>
+</body>
+</html>

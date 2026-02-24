@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const juegoController = require('../controllers/juegoController');
+const authMiddleware = require('../middleware/authMiddleware'); // protege la ruta
 
-// Obtener todos los juegos
-router.get('/', juegoController.getJuegos);
-
-// Obtener un juego por id
-router.get('/:id', juegoController.getJuegoById);
+// Ruta protegida que devuelve todos los juegos
+router.get('/', authMiddleware, juegoController.getAll);
 
 module.exports = router;

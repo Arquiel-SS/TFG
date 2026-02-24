@@ -16,6 +16,12 @@ app.get('/api/protegido', authMiddleware, (req, res) => {
     });
 });
 
+app.get('/api/me', authMiddleware, (req, res) => {
+    res.json({
+        message: "Usuario autenticado",
+        usuario: req.usuario
+    });
+});
 
 // Middlewares
 app.use(express.json());
@@ -28,7 +34,7 @@ app.use('/api/auth', authRoutes);
 
 // Ruta principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, './src/public/dashboard.html'));
 });
 
 app.listen(PORT, () => {

@@ -1,13 +1,7 @@
-const db = require('../db/connection');
+const pool = require('../db/connection');
 
-async function getAll() {
-    const [rows] = await db.query('SELECT * FROM Juego LIMIT 100');
+exports.obtenerTodos = async () => {
+    // Seleccionamos todas las columnas existentes en la tabla
+    const [rows] = await pool.query("SELECT * FROM Juego");
     return rows;
-}
-
-async function getById(id) {
-    const [rows] = await db.query('SELECT * FROM Juego WHERE id = ?', [id]);
-    return rows[0];
-}
-
-module.exports = { getAll, getById };
+};

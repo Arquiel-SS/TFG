@@ -1,21 +1,10 @@
-const Juego = require('../models/juegoModel');
+const juegoModel = require('../models/juegoModel');
 
-async function getJuegos(req, res) {
+exports.getAll = async (req, res) => {
     try {
-        const juegos = await Juego.getAll();
+        const juegos = await juegoModel.obtenerTodos();
         res.json(juegos);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-}
-
-async function getJuegoById(req, res) {
-    try {
-        const juego = await Juego.getById(req.params.id);
-        res.json(juego);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
-
-module.exports = { getJuegos, getJuegoById };
+};
