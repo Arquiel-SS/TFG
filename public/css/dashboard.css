@@ -1,5 +1,5 @@
 /* Reset básico */
-* {
+body, h1, h2, ul, li, p {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,116 +10,113 @@ body {
     background-color: #f5f5f5;
 }
 
-/* ================= NAVBAR ================= */
-
+/* Navbar */
 .navbar {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
-    height: 70px;
-    background-color: #111;
+    background-color: #222;
+    color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 40px;
+    padding: 10px 20px;
     z-index: 1000;
 }
 
-.nav-left {
+.nav-left, .nav-right {
     display: flex;
-    gap: 15px; /* botones bastante pegados */
+    align-items: center;
 }
 
 .nav-option {
     background: none;
     border: none;
     color: white;
+    margin-right: 15px;
     font-size: 16px;
     cursor: pointer;
 }
 
 .nav-option.active {
     font-weight: bold;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 30px; /* espacio grande antes del buscador */
-}
-
-#searchBar {
-    display: flex;
-    gap: 8px;
+    text-decoration: underline;
 }
 
 #searchBar input {
-    padding: 6px;
+    padding: 5px;
+    font-size: 14px;
 }
 
 #searchBar button {
-    padding: 6px 10px;
+    padding: 5px 10px;
+    margin-left: 5px;
+    cursor: pointer;
 }
 
 #logout {
-    padding: 6px 10px;
+    margin-left: 20px;
+    padding: 5px 10px;
     cursor: pointer;
 }
 
-/* ================= HEADER ================= */
-
+/* Header */
 .header {
-    margin-top: 100px; /* espacio para navbar fija */
-    padding: 60px 0;
+    margin-top: 60px; /* espacio para la navbar */
     text-align: center;
-    background-color: white;
+    padding: 40px 20px 20px 20px;
+    background-color: #eee;
 }
 
 .header h1 {
-    font-size: 48px;
+    font-size: 36px;
 }
 
-/* ================= MAIN CONTENT ================= */
-
-main {
-    padding: 40px 60px;
-}
-
-#containerContenido {
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
+/* Bloques de juegos */
+.bloque {
+    margin: 20px;
 }
 
 .bloque h2 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
-/* ================= CARRUSEL ================= */
-
+/* Listas de juegos como carrusel horizontal */
 .game-list {
-    list-style: none;
+    list-style: none; /* quitamos bullets */
     display: flex;
-    gap: 20px;
-    overflow-x: auto; /* Carrusel horizontal */
-    scroll-behavior: smooth;
-    padding-bottom: 10px;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 0;
 }
 
-.game-item {
-    min-width: 150px;
-    cursor: pointer;
+.game-list::-webkit-scrollbar {
+    height: 8px;
+}
+
+.game-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
 }
 
 .game-item img {
-    width: 150px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-    background-color: #ccc;
-    transition: transform 0.2s ease;
+    max-width: 150px;
+    height: auto;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s, border-color 0.2s;
 }
 
 .game-item img:hover {
     transform: scale(1.05);
+    border-color: #555;
+}
+
+/* Info detallada de juego */
+#juegos {
+    margin: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
 }

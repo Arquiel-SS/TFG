@@ -31,29 +31,19 @@
 
             <div class="bloque">
                 <h2>Títulos mejor valorados</h2>
-                <div id="contenedor-juegos"></div>
+                <ul id="highRatedGames" class="game-list"></ul>
             </div>
 
             <div class="bloque">
                 <h2>Otras sugerencias</h2>
-                <ul class="game-list">
-                    <li class="game-item"><img src="#" alt="Ejemplo1"></li>
-                    <li class="game-item"><img src="#" alt="Ejemplo2"></li>
-                    <li class="game-item"><img src="#" alt="Ejemplo3"></li>
-                </ul>
+                <ul id="otherSuggestionsGames" class="game-list"></ul>
             </div>
 
         </section>
+        <div id="juegos"></div>
     </main>
 
 <script src="/js/dashboard.js"></script>
-
-<script>
-document.getElementById('logout').addEventListener('click', () => {
-    localStorage.removeItem('token');
-    window.location.href = '/login.html';
-});
-</script>
 
 </body>
 </html>
