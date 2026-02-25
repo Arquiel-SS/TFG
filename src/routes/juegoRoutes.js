@@ -4,6 +4,6 @@ const juegoController = require('../controllers/juegoController');
 const authMiddleware = require('../middleware/authMiddleware'); // protege la ruta
 
 // Ruta protegida que devuelve todos los juegos
-router.get('/', authMiddleware, juegoController.getAll);
+router.get('/', authMiddleware, juegoController.obtenerJuegos);
 
 module.exports = router;
