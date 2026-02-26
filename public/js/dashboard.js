@@ -1,3 +1,4 @@
+// ================= DOM ELEMENTS =================
 const catalogoCarrusel = document.getElementById("catalogoCarrusel");
 const vistaCatalogo = document.getElementById("vistaCatalogo");
 const vistaJuego = document.getElementById("vistaJuego");
@@ -7,7 +8,19 @@ const subTabInfo = document.getElementById("subTabInfo");
 const subTabForo = document.getElementById("subTabForo");
 const volverCatalogoBtn = document.getElementById("volverCatalogo");
 
-// Cargar catálogo desde API
+// Perfil usuario
+const perfilContainer = document.getElementById('perfilContainer');
+const perfilMenu = document.getElementById('perfilMenu');
+const usernameMenu = document.getElementById('usernameMenu');
+const cerrarSesionBtn = document.getElementById('cerrarSesion');
+
+// ================= VARIABLES =================
+let juegos = [];
+let juegoActual = null;
+
+// ================= FUNCIONES =================
+
+// Cargar catálogo
 async function cargarCatalogo() {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -19,19 +32,23 @@ async function cargarCatalogo() {
         const response = await fetch("/api/juegos", {
             headers: { "Authorization": "Bearer " + token }
         });
-
         const data = await response.json();
-        const juegos = Array.isArray(data) ? data : data.juegos || [];
+        juegos = Array.isArray(data) ? data : data.juegos || [];
 
-        catalogoCarrusel.innerHTML = "";
+        catalogoCarrusel.innerHTML = '';
 
         juegos.forEach(juego => {
-            const li = document.createElement("div");
-            li.className = "gameItem";
-            li.innerHTML = `<img src="${juego.portada_url || 'https://via.placeholder.com/150x200?text=Sin+Portada'}" 
-                             alt="${juego.titulo}" title="${juego.titulo}">`;
-            li.addEventListener("click", () => mostrarJuego(juego));
-            catalogoCarrusel.appendChild(li);
+            const item = document.createElement('div');
+            item.className = 'gameItem';
+
+            const img = document.createElement('img');
+            img.src = juego.portada_url || 'https://via.placeholder.com/150x200?text=Sin+Portada';
+            img.alt = juego.titulo;
+            img.title = juego.titulo;
+
+            img.addEventListener('click', () => mostrarJuego(juego));
+            item.appendChild(img);
+            catalogoCarrusel.appendChild(item);
         });
 
     } catch (err) {
@@ -42,43 +59,77 @@ async function cargarCatalogo() {
 
 // Mostrar juego seleccionado
 function mostrarJuego(juego) {
-    // Ocultar catálogo, mostrar vista juego
-    vistaCatalogo.classList.add("hidden");
-    vistaJuego.classList.remove("hidden");
+    juegoActual = juego;
 
-    // Rellenar info
+    vistaCatalogo.classList.add('hidden');
+    vistaJuego.classList.remove('hidden');
+
     gameInfo.innerHTML = `
         <h2>${juego.titulo}</h2>
         <p><strong>Género:</strong> ${juego.genero}</p>
         <p><strong>Plataforma:</strong> ${juego.plataforma}</p>
         <p><strong>Desarrollador:</strong> ${juego.desarrollador}</p>
-        <p><strong>Fecha lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
+        <p><strong>Fecha de lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
         <p>${juego.descripcion || ""}</p>
-        <p><strong>Rating:</strong> ${juego.rating || 2.5} / 5</p>
-        ${juego.portada_url ? `<img src="${juego.portada_url}" alt="${juego.titulo}" style="max-width:200px;">` : ""}
+        <img src="${juego.portada_url || 'https://via.placeholder.com/150x200?text=Sin+Portada'}" style="max-width:200px;">
     `;
+
+    subTabInfo.classList.add('active');
+    subTabForo.classList.remove('active');
+    gameInfo.classList.remove('hidden');
+    gameForo.classList.add('hidden');
 }
 
-// Tabs internas del juego
-subTabInfo.addEventListener("click", () => {
-    subTabInfo.classList.add("active");
-    subTabForo.classList.remove("active");
-    gameInfo.classList.remove("hidden");
-    gameForo.classList.add("hidden");
+// Tabs internas
+subTabInfo.addEventListener('click', () => {
+    subTabInfo.classList.add('active');
+    subTabForo.classList.remove('active');
+    gameInfo.classList.remove('hidden');
+    gameForo.classList.add('hidden');
 });
 
-subTabForo.addEventListener("click", () => {
-    subTabForo.classList.add("active");
-    subTabInfo.classList.remove("active");
-    gameInfo.classList.add("hidden");
-    gameForo.classList.remove("hidden");
+subTabForo.addEventListener('click', () => {
+    subTabForo.classList.add('active');
+    subTabInfo.classList.remove('active');
+    gameInfo.classList.add('hidden');
+    gameForo.classList.remove('hidden');
 });
 
 // Botón volver al catálogo
-volverCatalogoBtn.addEventListener("click", () => {
-    vistaJuego.classList.add("hidden");
-    vistaCatalogo.classList.remove("hidden");
+volverCatalogoBtn.addEventListener('click', () => {
+    vistaJuego.classList.add('hidden');
+    vistaCatalogo.classList.remove('hidden');
 });
 
-// Iniciar
-document.addEventListener("DOMContentLoaded", cargarCatalogo);
+// Perfil usuario
+perfilContainer.addEventListener('click', () => {
+    perfilMenu.classList.toggle('hidden');
+});
+
+cerrarSesionBtn.addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login.html';
+});
+
+// Cargar info usuario
+async function cargarUsuario() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const res = await fetch('/api/me', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        usernameMenu.textContent = data.usuario.email || "Usuario";
+        // avatar.src = data.usuario.avatar_url || avatar actual
+    } catch (err) {
+        console.error("Error cargando info usuario:", err);
+    }
+}
+
+// ================= INICIALIZACIÓN =================
+document.addEventListener('DOMContentLoaded', () => {
+    cargarUsuario();
+    cargarCatalogo();
+});

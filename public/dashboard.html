@@ -8,7 +8,6 @@
 <body>
 
 <!-- ================= NAVBAR FIJA ================= -->
-
 <nav class="navbar">
     <div class="nav-center">
         <select id="selectorVista">
@@ -23,33 +22,38 @@
 
     <div class="nav-right">
         <input type="text" id="barraBusqueda" placeholder="Buscar juego...">
+
+        <!-- Perfil usuario -->
+        <div class="perfil-container" id="perfilContainer">
+            <img src="https://via.placeholder.com/40" alt="Avatar" id="avatarUsuario" class="avatar">
+            <div class="perfil-menu hidden" id="perfilMenu">
+                <p id="usernameMenu">Usuario</p>
+                <button id="verPerfil">Ver perfil</button>
+                <button id="editarPerfil">Editar perfil</button>
+                <button id="cerrarSesion">Cerrar sesión</button>
+            </div>
+        </div>
     </div>
 </nav>
 
 <!-- ================= HEADER ================= -->
-
 <header class="mainHeader">
     <h1>CATÁLOGO DE VIDEOJUEGOS</h1>
 </header>
 
 <!-- ================= CONTENEDOR PADRE DINÁMICO ================= -->
-
 <section id="contentWrapper">
 
     <!-- VISTA CATÁLOGO -->
     <section id="vistaCatalogo">
-
         <h2 id="tituloSeccion">Buscar Juegos</h2>
-
         <div id="catalogoCarrusel" class="carrusel">
             <!-- Solo portadas -->
         </div>
-
     </section>
 
-    <!-- VISTA JUEGO ACTIVO (REEMPLAZA VISUALMENTE CATÁLOGO) -->
+    <!-- VISTA JUEGO ACTIVO -->
     <section id="vistaJuego" class="hidden">
-
         <!-- Tabs internas -->
         <div class="gameTabs">
             <button id="subTabInfo" class="gameTab active">Información</button>
@@ -57,18 +61,14 @@
         </div>
 
         <div id="gameContent">
-
             <section id="gameInfo"></section>
-
             <section id="gameForo" class="hidden">
                 <h3>Foro del juego</h3>
                 <p>Sección en construcción.</p>
             </section>
-
         </div>
 
         <button id="volverCatalogo" class="volverBtn">← Volver al catálogo</button>
-
     </section>
 
 </section>
