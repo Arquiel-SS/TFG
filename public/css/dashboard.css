@@ -1,5 +1,5 @@
 /* Reset básico */
-body, h1, h2, ul, li, p {
+body, h1, h2, h3, ul, li, p, button, select, input {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -25,98 +25,96 @@ body {
     z-index: 1000;
 }
 
-.nav-left, .nav-right {
+.nav-center, .nav-right {
     display: flex;
     align-items: center;
 }
 
-.nav-option {
-    background: none;
-    border: none;
-    color: white;
-    margin-right: 15px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.nav-option.active {
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-#searchBar input {
+.nav-center select {
+    margin-right: 10px;
     padding: 5px;
     font-size: 14px;
 }
 
-#searchBar button {
-    padding: 5px 10px;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-#logout {
-    margin-left: 20px;
-    padding: 5px 10px;
-    cursor: pointer;
+.nav-right input {
+    padding: 5px;
+    font-size: 14px;
 }
 
 /* Header */
-.header {
-    margin-top: 60px; /* espacio para la navbar */
+.mainHeader {
+    margin-top: 60px; /* espacio navbar */
     text-align: center;
     padding: 40px 20px 20px 20px;
     background-color: #eee;
 }
 
-.header h1 {
+.mainHeader h1 {
     font-size: 36px;
 }
 
-/* Bloques de juegos */
-.bloque {
-    margin: 20px;
-}
-
-.bloque h2 {
-    margin-bottom: 10px;
-}
-
-/* Listas de juegos como carrusel horizontal */
-.game-list {
-    list-style: none; /* quitamos bullets */
+/* Carrusel */
+.carrusel {
     display: flex;
     overflow-x: auto;
     gap: 10px;
-    padding: 10px 0;
+    padding: 10px;
 }
 
-.game-list::-webkit-scrollbar {
+.carrusel::-webkit-scrollbar {
     height: 8px;
 }
 
-.game-list::-webkit-scrollbar-thumb {
+.carrusel::-webkit-scrollbar-thumb {
     background-color: #888;
     border-radius: 4px;
 }
 
-.game-item img {
+.carrusel .gameItem img {
     max-width: 150px;
-    height: auto;
     cursor: pointer;
     border: 2px solid transparent;
     transition: transform 0.2s, border-color 0.2s;
 }
 
-.game-item img:hover {
+.carrusel .gameItem img:hover {
     transform: scale(1.05);
     border-color: #555;
 }
 
-/* Info detallada de juego */
-#juegos {
-    margin: 20px;
+/* Vista juego */
+.hidden {
+    display: none;
+}
+
+.gameTabs {
+    display: flex;
+    margin: 10px 0;
+}
+
+.gameTab {
+    padding: 8px 16px;
+    margin-right: 5px;
+    cursor: pointer;
+    border: none;
+    background-color: #ddd;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.gameTab.active {
+    background-color: #bbb;
+}
+
+#gameContent {
+    margin-top: 10px;
     padding: 10px;
     background-color: #fff;
     border: 1px solid #ccc;
+}
+
+.volverBtn {
+    margin-top: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
 }

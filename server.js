@@ -32,6 +32,10 @@ app.use('/api/juegos', juegoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/auth', authRoutes);
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/dashboard.html'));
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });

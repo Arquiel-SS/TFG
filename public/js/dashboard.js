@@ -1,84 +1,84 @@
-// Contenedores de los carruseles y info
-const highRatedGames = document.getElementById("highRatedGames");
-const otherSuggestionsGames = document.getElementById("otherSuggestionsGames");
-const infoDiv = document.getElementById("juegos");
+const catalogoCarrusel = document.getElementById("catalogoCarrusel");
+const vistaCatalogo = document.getElementById("vistaCatalogo");
+const vistaJuego = document.getElementById("vistaJuego");
+const gameInfo = document.getElementById("gameInfo");
+const gameForo = document.getElementById("gameForo");
+const subTabInfo = document.getElementById("subTabInfo");
+const subTabForo = document.getElementById("subTabForo");
+const volverCatalogoBtn = document.getElementById("volverCatalogo");
 
-// Función para cargar todos los juegos desde el backend
-async function cargarJuegos() {
+// Cargar catálogo desde API
+async function cargarCatalogo() {
     const token = localStorage.getItem("token");
-
     if (!token) {
-        alert("No estás autenticado");
         window.location.href = "/login.html";
         return;
     }
 
     try {
         const response = await fetch("/api/juegos", {
-            headers: {
-                "Authorization": "Bearer " + token
-            }
+            headers: { "Authorization": "Bearer " + token }
         });
 
-        if (!response.ok) {
-            throw new Error("No autorizado o error en la API");
-        }
+        const data = await response.json();
+        const juegos = Array.isArray(data) ? data : data.juegos || [];
 
-        const juegos = await response.json();
+        catalogoCarrusel.innerHTML = "";
 
-        // Aseguramos que sea array
-        const juegosArray = Array.isArray(juegos) ? juegos : [];
-
-        // Limpiamos contenedores
-        highRatedGames.innerHTML = "";
-        otherSuggestionsGames.innerHTML = "";
-        infoDiv.innerHTML = "";
-
-        // Ordenamos por rating, si no existe usamos 2.5
-        const sortedJuegos = juegosArray.sort((a, b) => (b.rating || 2.5) - (a.rating || 2.5));
-
-        sortedJuegos.forEach((juego, index) => {
-            const portada = juego.portada_url || "https://via.placeholder.com/150x200?text=Sin+Portada";
-            const li = document.createElement("li");
-            li.className = "game-item";
-            li.innerHTML = `<img src="${portada}" alt="${juego.titulo}" title="${juego.titulo}">`;
-
-            li.addEventListener("click", () => mostrarInfoJuego(juego));
-
-            if (index < 3) {
-                highRatedGames.appendChild(li);
-            } else {
-                otherSuggestionsGames.appendChild(li);
-            }
+        juegos.forEach(juego => {
+            const li = document.createElement("div");
+            li.className = "gameItem";
+            li.innerHTML = `<img src="${juego.portada_url || 'https://via.placeholder.com/150x200?text=Sin+Portada'}" 
+                             alt="${juego.titulo}" title="${juego.titulo}">`;
+            li.addEventListener("click", () => mostrarJuego(juego));
+            catalogoCarrusel.appendChild(li);
         });
 
     } catch (err) {
-        infoDiv.innerHTML = '<p style="color:red;">Error al cargar los juegos</p>';
-        console.error("Error cargando juegos:", err);
+        catalogoCarrusel.innerHTML = '<p style="color:red;">Error al cargar los juegos</p>';
+        console.error(err);
     }
 }
 
-// Función para mostrar información detallada de un juego
-function mostrarInfoJuego(juego) {
-    infoDiv.innerHTML = `
-        <div style="border:1px solid black; padding:10px; margin:10px; background-color:#fff;">
-            <h3>${juego.titulo}</h3>
-            <p><strong>Género:</strong> ${juego.genero}</p>
-            <p><strong>Plataforma:</strong> ${juego.plataforma}</p>
-            <p><strong>Desarrollador:</strong> ${juego.desarrollador}</p>
-            <p><strong>Fecha de lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
-            <p>${juego.descripcion}</p>
-            ${juego.portada_url ? `<img src="${juego.portada_url}" alt="${juego.titulo}" style="max-width:200px;">` : ""}
-            <p><strong>Rating:</strong> ${juego.rating || 2.5} / 5</p>
-        </div>
+// Mostrar juego seleccionado
+function mostrarJuego(juego) {
+    // Ocultar catálogo, mostrar vista juego
+    vistaCatalogo.classList.add("hidden");
+    vistaJuego.classList.remove("hidden");
+
+    // Rellenar info
+    gameInfo.innerHTML = `
+        <h2>${juego.titulo}</h2>
+        <p><strong>Género:</strong> ${juego.genero}</p>
+        <p><strong>Plataforma:</strong> ${juego.plataforma}</p>
+        <p><strong>Desarrollador:</strong> ${juego.desarrollador}</p>
+        <p><strong>Fecha lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
+        <p>${juego.descripcion || ""}</p>
+        <p><strong>Rating:</strong> ${juego.rating || 2.5} / 5</p>
+        ${juego.portada_url ? `<img src="${juego.portada_url}" alt="${juego.titulo}" style="max-width:200px;">` : ""}
     `;
 }
 
-// Logout
-document.getElementById("logout").addEventListener("click", () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login.html";
+// Tabs internas del juego
+subTabInfo.addEventListener("click", () => {
+    subTabInfo.classList.add("active");
+    subTabForo.classList.remove("active");
+    gameInfo.classList.remove("hidden");
+    gameForo.classList.add("hidden");
 });
 
-// Cargamos los juegos al abrir la página
-document.addEventListener("DOMContentLoaded", cargarJuegos);
+subTabForo.addEventListener("click", () => {
+    subTabForo.classList.add("active");
+    subTabInfo.classList.remove("active");
+    gameInfo.classList.add("hidden");
+    gameForo.classList.remove("hidden");
+});
+
+// Botón volver al catálogo
+volverCatalogoBtn.addEventListener("click", () => {
+    vistaJuego.classList.add("hidden");
+    vistaCatalogo.classList.remove("hidden");
+});
+
+// Iniciar
+document.addEventListener("DOMContentLoaded", cargarCatalogo);

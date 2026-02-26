@@ -1,49 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <title>Dashboard - Catálogo de Videojuegos</title>
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <meta charset="UTF-8">
+    <title>Catálogo de Videojuegos</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-left">
-            <button class="nav-option active">Buscar juegos</button>
-            <button class="nav-option">Juegos favoritos</button>
+<!-- ================= NAVBAR FIJA ================= -->
+
+<nav class="navbar">
+    <div class="nav-center">
+        <select id="selectorVista">
+            <option value="buscar">Buscar juegos</option>
+            <option value="favoritos">Juegos favoritos</option>
+        </select>
+
+        <select id="selectorGenero">
+            <option value="">Todos los géneros</option>
+        </select>
+    </div>
+
+    <div class="nav-right">
+        <input type="text" id="barraBusqueda" placeholder="Buscar juego...">
+    </div>
+</nav>
+
+<!-- ================= HEADER ================= -->
+
+<header class="mainHeader">
+    <h1>CATÁLOGO DE VIDEOJUEGOS</h1>
+</header>
+
+<!-- ================= CONTENEDOR PADRE DINÁMICO ================= -->
+
+<section id="contentWrapper">
+
+    <!-- VISTA CATÁLOGO -->
+    <section id="vistaCatalogo">
+
+        <h2 id="tituloSeccion">Buscar Juegos</h2>
+
+        <div id="catalogoCarrusel" class="carrusel">
+            <!-- Solo portadas -->
         </div>
 
-        <div class="nav-right">
-            <div id="searchBar">
-                <input type="text" placeholder="Buscar...">
-                <button id="submitSearch">Buscar</button>
-            </div>
-            <button id="logout">Cerrar sesión</button>
+    </section>
+
+    <!-- VISTA JUEGO ACTIVO (REEMPLAZA VISUALMENTE CATÁLOGO) -->
+    <section id="vistaJuego" class="hidden">
+
+        <!-- Tabs internas -->
+        <div class="gameTabs">
+            <button id="subTabInfo" class="gameTab active">Información</button>
+            <button id="subTabForo" class="gameTab">Foro</button>
         </div>
-    </nav>
 
-    <header class="header">
-        <h1>Catálogo de Videojuegos</h1>
-    </header>
+        <div id="gameContent">
 
-    <main>
-        <section id="containerContenido">
+            <section id="gameInfo"></section>
 
-            <div class="bloque">
-                <h2>Títulos mejor valorados</h2>
-                <ul id="highRatedGames" class="game-list"></ul>
-            </div>
+            <section id="gameForo" class="hidden">
+                <h3>Foro del juego</h3>
+                <p>Sección en construcción.</p>
+            </section>
 
-            <div class="bloque">
-                <h2>Otras sugerencias</h2>
-                <ul id="otherSuggestionsGames" class="game-list"></ul>
-            </div>
+        </div>
 
-        </section>
-        <div id="juegos"></div>
-    </main>
+        <button id="volverCatalogo" class="volverBtn">← Volver al catálogo</button>
 
-<script src="/js/dashboard.js"></script>
+    </section>
 
+</section>
+
+<script src="js/dashboard.js" defer></script>
 </body>
 </html>
