@@ -2,7 +2,7 @@ const pool = require('../db/connection');
 
 exports.obtenerTodos = async () => {
     // Seleccionamos todas las columnas existentes en la tabla
-    const [rows] = await pool.query("SELECT * FROM Juego ORDER BY created_at DESC");
+    const [rows] = await pool.query("SELECT * FROM juego ORDER BY created_at DESC");
     return rows;
 };
 

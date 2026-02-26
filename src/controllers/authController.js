@@ -1,8 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const usuarioModel = require('../models/usuarioModel');
-
-const SECRET = "clave_super_secreta"; // luego la moveremos a .env
+const { SECRET } = require('../config/jwt');
 
 exports.register = async (req, res) => {
     try {

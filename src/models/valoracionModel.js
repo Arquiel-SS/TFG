@@ -1,9 +1,9 @@
-const db = require('../config/db');
+const pool = require('../db/connection');
 
 const Valoracion = {
 
     async crearOActualizar(usuarioId, juegoId, puntuacion) {
-        await db.query(`
+        await pool.query(`
             INSERT INTO valoracion (usuario_id, juego_id, puntuacion)
             VALUES (?, ?, ?)
             ON DUPLICATE KEY UPDATE puntuacion = ?
