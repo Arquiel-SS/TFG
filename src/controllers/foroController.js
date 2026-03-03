@@ -1,5 +1,4 @@
 // src/controllers/foroController.js
-
 const hiloModel = require('../models/hiloModel');
 const mensajeModel = require('../models/mensajeModel');
 
@@ -11,21 +10,18 @@ exports.listarHilos = async (req, res) => {
 
     try {
         const hilos = await hiloModel.obtenerHilosPorJuego(juegoId);
-        if (!Array.isArray(hilos)) {
-            console.error("Los hilos no son un array:", hilos);
-            return res.status(500).json({ error: "Datos incorrectos desde el modelo" });
-        }
-        res.json(hilos);
+        // Siempre devolver array
+        res.json(Array.isArray(hilos) ? hilos : []);
     } catch (err) {
         console.error("Error listando hilos:", err);
-        res.status(500).json({ error: 'Error listando hilos' });
+        res.status(500).json([]);
     }
 };
 
 // Crear hilo nuevo
 exports.crearHilo = async (req, res) => {
     const juegoId = req.params.juegoId;
-    const usuarioId = req.user.id; // Asegúrate de tener middleware de auth que agregue req.user
+    const usuarioId = req.user.id; // middleware auth
     const { titulo, contenido } = req.body;
 
     if (!titulo || !contenido) {
@@ -49,17 +45,17 @@ exports.listarMensajes = async (req, res) => {
 
     try {
         const mensajes = await mensajeModel.obtenerMensajesPorHilo(hiloId);
-        res.json(mensajes);
+        res.json(Array.isArray(mensajes) ? mensajes : []);
     } catch (err) {
         console.error("Error listando mensajes:", err);
-        res.status(500).json({ error: 'Error listando mensajes' });
+        res.status(500).json([]);
     }
 };
 
 // Crear mensaje en hilo
 exports.crearMensaje = async (req, res) => {
     const hiloId = req.params.hiloId;
-    const usuarioId = req.user.id; // Asegúrate de tener middleware de auth que agregue req.user
+    const usuarioId = req.user.id; // middleware auth
     const { contenido } = req.body;
 
     if (!contenido) {

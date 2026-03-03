@@ -11,31 +11,41 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function cargarHilos() {
-    const res = await fetch("/api/hilos");
-    const hilos = await res.json();
+    try {
+        const params = new URLSearchParams(window.location.search);
+        const juegoId = params.get("juegoId"); // Asegúrate de pasar juegoId en la URL
+        const res = await fetch(`/api/foro/${juegoId}`);
+        const hilos = await res.json();
 
-    const contenedor = document.getElementById("listaHilos");
-    contenedor.innerHTML = "";
+        if (!Array.isArray(hilos)) {
+            console.error("Los hilos no son un array:", hilos);
+            return;
+        }
 
-    hilos.forEach(hilo => {
+        const contenedor = document.getElementById("listaHilos");
+        contenedor.innerHTML = "";
 
-        const div = document.createElement("div");
-        div.classList.add("hilo-card");
+        hilos.forEach(hilo => {
+            const div = document.createElement("div");
+            div.classList.add("hilo-card");
 
-        div.innerHTML = `
-            <h3>${hilo.titulo}</h3>
-            <p>Creado por: ${hilo.creador}</p>
-            <p>${hilo.total_mensajes} mensajes</p>
-            <p>Último mensaje por: ${hilo.ultimo_usuario || "—"}</p>
-            <p>${formatearFecha(hilo.ultimo_mensaje_fecha)}</p>
-        `;
+            div.innerHTML = `
+                <h3>${hilo.titulo}</h3>
+                <p>Creado por: ${hilo.creador}</p>
+                <p>${hilo.total_mensajes} mensajes</p>
+                <p>Último mensaje por: ${hilo.ultimo_usuario || "—"}</p>
+                <p>${formatearFecha(hilo.ultimo_mensaje_fecha)}</p>
+            `;
 
-        div.addEventListener("click", () => {
-            window.location.href = `hilo.html?id=${hilo.id}`;
+            div.addEventListener("click", () => {
+                window.location.href = `hilo.html?id=${hilo.id}`;
+            });
+
+            contenedor.appendChild(div);
         });
-
-        contenedor.appendChild(div);
-    });
+    } catch (err) {
+        console.error("Error cargando hilos:", err);
+    }
 }
 
 async function cargarHiloIndividual() {
@@ -43,74 +53,80 @@ async function cargarHiloIndividual() {
     const params = new URLSearchParams(window.location.search);
     const hiloId = params.get("id");
 
-    const res = await fetch(`/api/hilo/${hiloId}`);
-    const data = await res.json();
+    try {
+        const res = await fetch(`/api/foro/mensaje/${hiloId}`);
+        const mensajes = await res.json();
 
-    const contenedor = document.getElementById("hiloContainer");
-    contenedor.innerHTML = "";
+        if (!Array.isArray(mensajes)) {
+            console.error("Los mensajes no son un array:", mensajes);
+            return;
+        }
 
-    // Cabecera del hilo
-    const titulo = document.createElement("h2");
-    titulo.textContent = data.hilo.titulo;
+        const contenedor = document.getElementById("hiloContainer");
+        contenedor.innerHTML = "";
 
-    const contenido = document.createElement("p");
-    contenido.textContent = data.hilo.contenido;
+        // Cabecera del hilo
+        if (mensajes.length > 0) {
+            const titulo = document.createElement("h2");
+            titulo.textContent = mensajes[0].hilo_titulo || "Hilo";
+            contenedor.appendChild(titulo);
+        }
 
-    contenedor.appendChild(titulo);
-    contenedor.appendChild(contenido);
+        // Mensajes
+        mensajes.forEach(mensaje => {
+            const div = document.createElement("div");
+            div.classList.add("mensaje");
 
-    // Mensajes
-    data.mensajes.forEach(mensaje => {
+            div.innerHTML = `
+                <strong>${mensaje.username}</strong>
+                <small>${formatearFecha(mensaje.fecha_creacion)}</small>
+                <p>${mensaje.contenido}</p>
+                <button onclick="darLike(${mensaje.id}, this)">
+                    ❤️ <span>${mensaje.likes}</span>
+                </button>
+            `;
 
-        const div = document.createElement("div");
-        div.classList.add("mensaje");
+            contenedor.appendChild(div);
+        });
 
-        div.innerHTML = `
-            <strong>${mensaje.username}</strong>
-            <small>${formatearFecha(mensaje.fecha_creacion)}</small>
-            <p>${mensaje.contenido}</p>
-            <button onclick="darLike(${mensaje.id}, this)">
-                ❤️ <span>${mensaje.likes}</span>
-            </button>
-        `;
+        // Responder
+        document.getElementById("btnResponder")
+            .addEventListener("click", () => enviarRespuesta(hiloId));
 
-        contenedor.appendChild(div);
-    });
-
-    // Responder
-    document.getElementById("btnResponder")
-        .addEventListener("click", () => enviarRespuesta(hiloId));
+    } catch (err) {
+        console.error("Error cargando hilo individual:", err);
+    }
 }
 
 async function darLike(id, boton) {
-
-    const res = await fetch(`/api/mensaje/${id}/like`, {
-        method: "POST"
-    });
-
-    const data = await res.json();
-
-    boton.querySelector("span").textContent = data.likes;
+    try {
+        const res = await fetch(`/api/mensaje/${id}/like`, { method: "POST" });
+        const data = await res.json();
+        boton.querySelector("span").textContent = data.likes;
+    } catch (err) {
+        console.error("Error al dar like:", err);
+    }
 }
 
 async function enviarRespuesta(hiloId) {
-
     const contenido = document.getElementById("respuestaInput").value;
-
     if (!contenido.trim()) return;
 
-    await fetch(`/api/hilo/${hiloId}/mensaje`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contenido })
-    });
+    try {
+        await fetch(`/api/foro/mensaje/${hiloId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ contenido })
+        });
 
-    location.reload();
+        location.reload();
+    } catch (err) {
+        console.error("Error enviando respuesta:", err);
+    }
 }
 
 function formatearFecha(fecha) {
     if (!fecha) return "";
-
     const f = new Date(fecha);
     return f.toLocaleString();
 }

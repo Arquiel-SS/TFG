@@ -22,6 +22,7 @@ let juegoActual = null;
 const listaHilos = document.getElementById("listaHilos");
 const foroCrear = document.getElementById("foroCrear");
 const foroDetalle = document.getElementById("foroDetalle");
+const foroLista = document.getElementById("gameForo"); // contenedor principal de lista
 
 const crearHiloBtn = document.getElementById("crearHiloBtn");
 const guardarHiloBtn = document.getElementById("guardarHilo");
@@ -96,7 +97,7 @@ function mostrarJuego(juego) {
     gameForo.classList.add('hidden');
 }
 
-// Tabs internas
+// -------- TABS INTERNAS --------
 subTabInfo.addEventListener('click', () => {
     subTabInfo.classList.add('active');
     subTabForo.classList.remove('active');
@@ -113,7 +114,7 @@ subTabForo.addEventListener('click', () => {
     cargarHilos();
 });
 
-// Botón volver al catálogo
+// -------- BOTÓN VOLVER AL CATÁLOGO --------
 volverCatalogoBtn.addEventListener('click', () => {
     vistaJuego.classList.add('hidden');
     vistaCatalogo.classList.remove('hidden');
@@ -158,6 +159,7 @@ async function cargarHilos() {
 
         if (!Array.isArray(hilos)) {
             console.error("Los hilos no son un array:", hilos);
+            listaHilos.innerHTML = '<p style="color:red;">Error cargando los hilos</p>';
             return;
         }
 
@@ -166,13 +168,14 @@ async function cargarHilos() {
             const div = document.createElement("div");
             div.className = "hiloItem";
             div.innerHTML = `<strong>${hilo.titulo}</strong><br>
-                            <small>Por ${hilo.autor}</small>`;
+                            <small>Por ${hilo.usuario_id}</small>`;
             div.addEventListener("click", () => abrirHilo(hilo));
             listaHilos.appendChild(div);
         });
 
     } catch (err) {
         console.error("Error cargando hilos:", err);
+        listaHilos.innerHTML = '<p style="color:red;">Error de conexión al servidor</p>';
     }
 }
 
@@ -185,7 +188,6 @@ function abrirHilo(hilo) {
     detalleTitulo.textContent = hilo.titulo;
     detalleMensajes.innerHTML = "";
 
-    // Cargar mensajes desde backend
     cargarMensajes(hilo.id);
 }
 
@@ -203,28 +205,15 @@ async function cargarMensajes(hiloId) {
             const div = document.createElement("div");
             div.className = "mensajeItem";
             div.innerHTML = `
-                <div class="mensajeAutor">${m.username}</div>
+                <div class="mensajeAutor">${m.usuario_id}</div>
                 <div>${m.contenido}</div>
-                <div><button class="likeBtn" data-id="${m.id}">👍 ${m.likes}</button></div>
             `;
             detalleMensajes.appendChild(div);
         });
 
-        // Asignar evento de like
-        detalleMensajes.querySelectorAll(".likeBtn").forEach(btn => {
-            btn.addEventListener("click", async () => {
-                const mensajeId = btn.dataset.id;
-                const res = await fetch(`/api/foro/like/${mensajeId}`, {
-                    method: "POST",
-                    headers: { "Authorization": "Bearer " + token }
-                });
-                const data = await res.json();
-                btn.textContent = `👍 ${data.likes}`;
-            });
-        });
-
     } catch (err) {
         console.error("Error cargando mensajes:", err);
+        detalleMensajes.innerHTML = '<p style="color:red;">Error cargando mensajes</p>';
     }
 }
 
@@ -242,24 +231,33 @@ cancelarHiloBtn.addEventListener("click", () => {
 guardarHiloBtn.addEventListener("click", async () => {
     const token = localStorage.getItem("token");
 
-    await fetch(`/api/foro/${juegoActual.id}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({
-            titulo: tituloHiloInput.value,
-            contenido: contenidoHiloInput.value
-        })
-    });
+    if (!tituloHiloInput.value || !contenidoHiloInput.value) return;
 
-    tituloHiloInput.value = "";
-    contenidoHiloInput.value = "";
-    foroCrear.classList.add("hidden");
-    foroLista.classList.remove("hidden");
+    try {
+        const res = await fetch(`/api/foro/${juegoActual.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+                titulo: tituloHiloInput.value,
+                contenido: contenidoHiloInput.value
+            })
+        });
 
-    cargarHilos();
+        if (!res.ok) throw new Error("Error creando hilo");
+
+        tituloHiloInput.value = "";
+        contenidoHiloInput.value = "";
+        foroCrear.classList.add("hidden");
+        foroLista.classList.remove("hidden");
+
+        cargarHilos();
+    } catch (err) {
+        console.error(err);
+        alert("Error creando el hilo");
+    }
 });
 
 // Crear mensaje en hilo
@@ -267,17 +265,22 @@ enviarRespuestaBtn.addEventListener("click", async () => {
     if (!respuestaMensajeInput.value.trim()) return;
     const token = localStorage.getItem("token");
 
-    await fetch(`/api/foro/mensaje/${hiloActual.id}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({ contenido: respuestaMensajeInput.value })
-    });
+    try {
+        await fetch(`/api/foro/mensaje/${hiloActual.id}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({ contenido: respuestaMensajeInput.value })
+        });
 
-    respuestaMensajeInput.value = "";
-    cargarMensajes(hiloActual.id);
+        respuestaMensajeInput.value = "";
+        cargarMensajes(hiloActual.id);
+    } catch (err) {
+        console.error(err);
+        alert("Error enviando mensaje");
+    }
 });
 
 // Volver a lista de hilos
