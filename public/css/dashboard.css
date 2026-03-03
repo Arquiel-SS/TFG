@@ -169,3 +169,42 @@ body {
     font-weight: bold;
     margin-bottom: 5px;
 }
+
+/* ================= FORO ================= */
+
+.foroHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#listaHilos .hiloItem {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background-color: #fafafa;
+}
+
+#listaHilos .hiloItem:hover {
+    background-color: #f0f0f0;
+}
+
+#foroCrear input,
+#foroCrear textarea,
+#foroDetalle textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#detalleMensajes .mensajeItem {
+    border-bottom: 1px solid #ddd;
+    padding: 8px 0;
+}
+
+.mensajeAutor {
+    font-weight: bold;
+    font-size: 14px;
+}

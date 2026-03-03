@@ -63,8 +63,35 @@
         <div id="gameContent">
             <section id="gameInfo"></section>
             <section id="gameForo" class="hidden">
-                <h3>Foro del juego</h3>
-                <p>Sección en construcción.</p>
+
+                <!-- Vista lista de hilos -->
+                <div id="foroLista">
+                    <div class="foroHeader">
+                        <h3>Foro del juego</h3>
+                        <button id="crearHiloBtn">+ Nuevo hilo</button>
+                    </div>
+                    <div id="listaHilos"></div>
+                </div>
+
+                <!-- Vista crear hilo -->
+                <div id="foroCrear" class="hidden">
+                    <h3>Crear nuevo hilo</h3>
+                    <input type="text" id="tituloHilo" placeholder="Título del hilo">
+                    <textarea id="contenidoHilo" placeholder="Escribe tu mensaje inicial..."></textarea>
+                    <button id="guardarHilo">Publicar</button>
+                    <button id="cancelarHilo">Cancelar</button>
+                </div>
+
+                <!-- Vista hilo individual -->
+                <div id="foroDetalle" class="hidden">
+                    <button id="volverLista">← Volver a hilos</button>
+                    <h3 id="detalleTitulo"></h3>
+                    <div id="detalleMensajes"></div>
+
+                    <textarea id="respuestaMensaje" placeholder="Escribe una respuesta..."></textarea>
+                    <button id="enviarRespuesta">Responder</button>
+                </div>
+
             </section>
         </div>
 
