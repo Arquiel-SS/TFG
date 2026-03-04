@@ -105,13 +105,22 @@ subTabInfo.addEventListener('click', () => {
     gameForo.classList.add('hidden');
 });
 
-subTabForo.addEventListener('click', () => {
+subTabForo.addEventListener('click', async () => {
     subTabInfo.classList.remove('active');
     subTabForo.classList.add('active');
     gameInfo.classList.add('hidden');
     gameForo.classList.remove('hidden');
 
-    cargarHilos();
+    // Siempre limpiar antes de cargar
+    listaHilos.innerHTML = "";
+
+    // Mostrar el contenedor de lista (por si estaba oculto)
+    listaHilos.classList.remove("hidden");
+    foroCrear.classList.add("hidden");
+    foroDetalle.classList.add("hidden");
+
+    // Volver a cargar los hilos
+    await cargarHilos();
 });
 
 // -------- BOTÓN VOLVER AL CATÁLOGO --------
@@ -146,29 +155,101 @@ async function cargarUsuario() {
 }
 
 // ================= FORO =================
+// -------- CREAR HILO (mostrar formulario) --------
+crearHiloBtn.addEventListener("click", () => {
+    // Oculta la lista de hilos
+    listaHilos.classList.add("hidden");
+    // Muestra el formulario de creación
+    foroCrear.classList.remove("hidden");
+
+    // Limpiamos campos por si hay texto anterior
+    tituloHiloInput.value = "";
+    contenidoHiloInput.value = "";
+});
+
+// Cancelar creación (volver a la lista)
+cancelarHiloBtn.addEventListener("click", () => {
+    // Oculta el formulario
+    foroCrear.classList.add("hidden");
+    // Muestra la lista de hilos nuevamente
+    listaHilos.classList.remove("hidden");
+});
+
+// Guardar hilo
+guardarHiloBtn.addEventListener("click", async () => {
+    const token = localStorage.getItem("token");
+
+    if (!tituloHiloInput.value.trim() || !contenidoHiloInput.value.trim()) {
+        return alert("Debes completar título y contenido.");
+    }
+
+    try {
+        const res = await fetch(`/api/foro/juegos/${juegoActual.id}/hilos`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+                titulo: tituloHiloInput.value,
+                contenido: contenidoHiloInput.value
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            console.error("Error al crear hilo:", data);
+            return alert("Error al crear hilo: " + (data.error || res.statusText));
+        }
+
+        // Una vez creado, volver a la lista del foro y recargar
+        foroCrear.classList.add("hidden");
+        foroLista.classList.remove("hidden");
+
+        // Refrescar hilos
+        await cargarHilos();
+
+    } catch (err) {
+        console.error("Error creando hilo:", err);
+        alert("Ha ocurrido un error al crear el hilo.");
+    }
+});
+
+// -------- CARGAR HILOS --------
 async function cargarHilos() {
     if (!juegoActual) return;
     const token = localStorage.getItem("token");
 
     try {
-        const res = await fetch(`/api/foro/${juegoActual.id}`, {
+        const res = await fetch(`/api/foro/juegos/${juegoActual.id}/hilos`, {
             headers: { "Authorization": "Bearer " + token }
         });
 
         const hilos = await res.json();
 
+        // Validación de array
         if (!Array.isArray(hilos)) {
             console.error("Los hilos no son un array:", hilos);
-            listaHilos.innerHTML = '<p style="color:red;">Error cargando los hilos</p>';
+            listaHilos.innerHTML = '<p style="color:red;">Error cargando hilos</p>';
             return;
         }
 
+        // Mostrar si no hay hilos
+        if (hilos.length === 0) {
+            listaHilos.innerHTML = '<p>No hay hilos todavía.</p>';
+            return;
+        }
+
+        // Construir lista
         listaHilos.innerHTML = "";
         hilos.forEach(hilo => {
             const div = document.createElement("div");
             div.className = "hiloItem";
-            div.innerHTML = `<strong>${hilo.titulo}</strong><br>
-                            <small>Por ${hilo.usuario_id}</small>`;
+            div.innerHTML = `
+                <strong>${hilo.titulo}</strong><br>
+                <small>Por ${hilo.autor || hilo.usuario_id || "Anónimo"}</small>
+            `;
             div.addEventListener("click", () => abrirHilo(hilo));
             listaHilos.appendChild(div);
         });
@@ -179,6 +260,7 @@ async function cargarHilos() {
     }
 }
 
+// -------- ABRIR HILO --------
 function abrirHilo(hilo) {
     hiloActual = hilo;
 
@@ -191,11 +273,12 @@ function abrirHilo(hilo) {
     cargarMensajes(hilo.id);
 }
 
+// -------- CARGAR MENSAJES --------
 async function cargarMensajes(hiloId) {
     const token = localStorage.getItem("token");
 
     try {
-        const res = await fetch(`/api/foro/mensaje/${hiloId}`, {
+        const res = await fetch(`/api/foro/hilos/${hiloId}/mensajes`, {
             headers: { "Authorization": "Bearer " + token }
         });
         const mensajes = await res.json();
@@ -205,7 +288,7 @@ async function cargarMensajes(hiloId) {
             const div = document.createElement("div");
             div.className = "mensajeItem";
             div.innerHTML = `
-                <div class="mensajeAutor">${m.usuario_id}</div>
+                <div class="mensajeAutor">${m.username}</div>
                 <div>${m.contenido}</div>
             `;
             detalleMensajes.appendChild(div);
@@ -217,56 +300,13 @@ async function cargarMensajes(hiloId) {
     }
 }
 
-// Crear hilo
-crearHiloBtn.addEventListener("click", () => {
-    foroLista.classList.add("hidden");
-    foroCrear.classList.remove("hidden");
-});
-
-cancelarHiloBtn.addEventListener("click", () => {
-    foroCrear.classList.add("hidden");
-    foroLista.classList.remove("hidden");
-});
-
-guardarHiloBtn.addEventListener("click", async () => {
-    const token = localStorage.getItem("token");
-
-    if (!tituloHiloInput.value || !contenidoHiloInput.value) return;
-
-    try {
-        const res = await fetch(`/api/foro/${juegoActual.id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({
-                titulo: tituloHiloInput.value,
-                contenido: contenidoHiloInput.value
-            })
-        });
-
-        if (!res.ok) throw new Error("Error creando hilo");
-
-        tituloHiloInput.value = "";
-        contenidoHiloInput.value = "";
-        foroCrear.classList.add("hidden");
-        foroLista.classList.remove("hidden");
-
-        cargarHilos();
-    } catch (err) {
-        console.error(err);
-        alert("Error creando el hilo");
-    }
-});
-
-// Crear mensaje en hilo
+// -------- ENVIAR MENSAJE --------
 enviarRespuestaBtn.addEventListener("click", async () => {
     if (!respuestaMensajeInput.value.trim()) return;
     const token = localStorage.getItem("token");
 
     try {
-        await fetch(`/api/foro/mensaje/${hiloActual.id}`, {
+        const res = await fetch(`/api/foro/hilos/${hiloActual.id}/mensajes`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -275,15 +315,23 @@ enviarRespuestaBtn.addEventListener("click", async () => {
             body: JSON.stringify({ contenido: respuestaMensajeInput.value })
         });
 
+        const data = await res.json();
+
+        if (!res.ok) {
+            console.error(data);
+            return alert("Error al enviar mensaje: " + (data.error || res.statusText));
+        }
+
         respuestaMensajeInput.value = "";
         cargarMensajes(hiloActual.id);
+
     } catch (err) {
         console.error(err);
-        alert("Error enviando mensaje");
+        alert("Error enviando mensaje (conexión).");
     }
 });
 
-// Volver a lista de hilos
+// -------- VOLVER A LISTA --------
 volverListaBtn.addEventListener("click", () => {
     foroDetalle.classList.add("hidden");
     foroLista.classList.remove("hidden");

@@ -5,13 +5,20 @@ const db = require('../db/connection');
 async function obtenerHilosPorJuego(juegoId) {
     try {
         const [rows] = await db.query(
-            `SELECT h.id, h.titulo, u.username AS autor, 
-                    (SELECT COUNT(*) FROM mensaje m WHERE m.hilo_id = h.id) AS total_mensajes,
-                    (SELECT fecha_envio FROM mensaje m2 WHERE m2.hilo_id = h.id ORDER BY m2.fecha_envio DESC LIMIT 1) AS ultimo_mensaje_fecha,
-                    (SELECT u2.username FROM mensaje m3 JOIN usuario u2 ON m3.usuario_id = u2.id WHERE m3.hilo_id = h.id ORDER BY m3.fecha_envio DESC LIMIT 1) AS ultimo_usuario
+            `SELECT 
+                h.id, 
+                h.titulo, 
+                u.username AS autor, 
+                (SELECT COUNT(*) FROM mensaje m WHERE m.hilo_id = h.id) AS total_mensajes,
+                (SELECT m2.fecha_creacion FROM mensaje m2 WHERE m2.hilo_id = h.id ORDER BY m2.fecha_creacion DESC LIMIT 1) AS ultimo_mensaje_fecha,
+                (SELECT u2.username FROM mensaje m3 
+                    JOIN usuario u2 ON m3.usuario_id = u2.id 
+                    WHERE m3.hilo_id = h.id 
+                    ORDER BY m3.fecha_creacion DESC LIMIT 1
+                ) AS ultimo_usuario
             FROM hilo h
             JOIN usuario u ON h.usuario_id = u.id
-            WHERE h.juego_id = ? 
+            WHERE h.juego_id = ?
             ORDER BY h.fecha_creacion DESC`,
             [juegoId]
         );
