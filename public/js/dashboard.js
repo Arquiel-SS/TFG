@@ -275,12 +275,14 @@ async function cargarHilos() {
 function abrirHilo(hilo) {
     hiloActual = hilo;
 
-    foroLista.classList.add("hidden");
+    // Ocultar lista de hilos
+    listaHilos.classList.add("hidden");
+    // Mostrar detalle de mensajes
     foroDetalle.classList.remove("hidden");
 
     detalleTitulo.textContent = hilo.titulo;
-    detalleMensajes.innerHTML = "";
 
+    // Cargar mensajes desde API
     cargarMensajes(hilo.id);
 }
 
@@ -295,12 +297,19 @@ async function cargarMensajes(hiloId) {
         const mensajes = await res.json();
 
         detalleMensajes.innerHTML = "";
+
+        if (!Array.isArray(mensajes) || mensajes.length === 0) {
+            detalleMensajes.innerHTML = "<p>No hay mensajes aún en este hilo.</p>";
+            return;
+        }
+
         mensajes.forEach(m => {
             const div = document.createElement("div");
             div.className = "mensajeItem";
             div.innerHTML = `
-                <div class="mensajeAutor">${m.username}</div>
-                <div>${m.contenido}</div>
+                <p class="mensajeAutor"><strong>${m.username}</strong> • ${new Date(m.fecha).toLocaleString()}</p>
+                <p>${m.contenido}</p>
+                <hr>
             `;
             detalleMensajes.appendChild(div);
         });
@@ -313,7 +322,9 @@ async function cargarMensajes(hiloId) {
 
 // -------- ENVIAR MENSAJE --------
 enviarRespuestaBtn.addEventListener("click", async () => {
-    if (!respuestaMensajeInput.value.trim()) return;
+    const contenido = respuestaMensajeInput.value.trim();
+    if (!contenido) return;
+
     const token = localStorage.getItem("token");
 
     try {
@@ -323,29 +334,37 @@ enviarRespuestaBtn.addEventListener("click", async () => {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + token
             },
-            body: JSON.stringify({ contenido: respuestaMensajeInput.value })
+            body: JSON.stringify({ contenido })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-            console.error(data);
             return alert("Error al enviar mensaje: " + (data.error || res.statusText));
         }
 
+        // Limpiar campo y recargar mensajes
         respuestaMensajeInput.value = "";
         cargarMensajes(hiloActual.id);
 
     } catch (err) {
-        console.error(err);
+        console.error("Error enviando mensaje:", err);
         alert("Error enviando mensaje (conexión).");
     }
 });
 
 // -------- VOLVER A LISTA --------
-volverListaBtn.addEventListener("click", () => {
+volverListaBtn.addEventListener("click", async () => {
+    // Oculta la vista de mensajes
     foroDetalle.classList.add("hidden");
-    foroLista.classList.remove("hidden");
+    // Muestra la lista de hilos
+    listaHilos.classList.remove("hidden");
+
+    // Limpia los mensajes anteriores
+    detalleMensajes.innerHTML = "";
+
+    // Recarga los hilos desde la API
+    await cargarHilos();
 });
 
 // ================= INICIALIZACIÓN =================
