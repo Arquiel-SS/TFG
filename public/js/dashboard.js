@@ -277,6 +277,8 @@ guardarHiloBtn.addEventListener("click", async () => {
     await cargarHilos();
 });
 
+// ...continúa abajo (foro y navegación)...
+
 // ------------------- FORO -------------------
 
 // Pestaña Foro: mostrar hilos al pulsar
