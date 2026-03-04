@@ -8,6 +8,37 @@ const subTabInfo = document.getElementById("subTabInfo");
 const subTabForo = document.getElementById("subTabForo");
 const volverCatalogoBtn = document.getElementById("volverCatalogo");
 
+// ================= UTILIDADES =================
+
+// Formatear fecha a formato de calendario simple (DD/MM/YYYY)
+function formatearFecha(fecha) {
+    if (!fecha) return "Desconocida";
+    
+    try {
+        // Si es string, extraer solo la fecha (YYYY-MM-DD)
+        if (typeof fecha === 'string') {
+            const partes = fecha.split('T')[0]; // Toma solo YYYY-MM-DD
+            if (partes && partes.length === 10) {
+                const [year, month, day] = partes.split('-');
+                return `${day}/${month}/${year}`;
+            }
+        }
+        
+        // Si es un objeto Date
+        const dateObj = new Date(fecha);
+        if (!isNaN(dateObj.getTime())) {
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+    } catch (e) {
+        console.error("Error al formatear fecha:", e);
+    }
+    
+    return "Desconocida";
+}
+
 // Navbar filtros
 const selectorVistaCat = document.getElementById("selectorVistaCat");
 
@@ -170,7 +201,7 @@ function mostrarJuego(juego) {
         <p><strong>Género:</strong> ${juego.genero}</p>
         <p><strong>Plataforma:</strong> ${juego.plataforma}</p>
         <p><strong>Desarrollador:</strong> ${juego.desarrollador}</p>
-        <p><strong>Fecha de lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
+        <p><strong>Fecha de lanzamiento:</strong> ${formatearFecha(juego.fecha_lanzamiento)}</p>
         <p>${juego.descripcion || ""}</p>
 
         <!-- Favorito -->
@@ -254,34 +285,6 @@ crearHiloBtn.addEventListener("click", () => {
 cancelarHiloBtn.addEventListener("click", () => {
     foroCrear.classList.add("hidden");
     listaHilos.classList.remove("hidden");
-});
-
-// Guardar hilo y recargar lista
-guardarHiloBtn.addEventListener("click", async () => {
-    const token = localStorage.getItem("token");
-
-    if (!tituloHiloInput.value.trim() || !contenidoHiloInput.value.trim()) {
-        return alert("Debes completar título y contenido.");
-    }
-
-    const res = await fetch(`/api/foro/juegos/${juegoActual.id}/hilos`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({
-            titulo: tituloHiloInput.value,
-            contenido: contenidoHiloInput.value
-        })
-    });
-
-    const data = await res.json();
-    if (!res.ok) return alert("Error: " + (data.error || res.statusText));
-
-    foroCrear.classList.add("hidden");
-    listaHilos.classList.remove("hidden");
-    await cargarHilos();
 });
 
 // ...continúa abajo (foro y navegación)...

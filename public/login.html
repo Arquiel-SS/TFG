@@ -1,18 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Login - Catálogo de Videojuegos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Catálogo de Videojuegos</title>
+    <link rel="stylesheet" href="css/auth.css">
 </head>
 <body>
-    <h2>Login</h2>
-    <form id="loginForm">
-        <label>Email: <input type="email" id="email" required></label><br>
-        <label>Contraseña: <input type="password" id="password" required></label><br>
-        <button type="submit">Entrar</button>
-    </form>
-    <div id="error" style="color:red;"></div>
-    <p>¿No tienes cuenta? <a href="/register.html">Regístrate aquí</a></p>
+    <div class="auth-container">
+        <h2>Iniciar Sesión</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>
+                    <span>Email</span>
+                    <input type="email" id="email" placeholder="tu@email.com" required>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span>Contraseña</span>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </label>
+            </div>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div id="error"></div>
+        
+        <p>¿No tienes cuenta? <a href="/register.html">Regístrate aquí</a></p>
+    </div>
 
     <script>
         const form = document.getElementById('loginForm');

@@ -28,7 +28,12 @@ exports.crearHilo = async (req, res) => {
     }
 
     try {
+        // Crear el hilo
         const hilo = await hiloModel.crearHilo(juegoId, usuarioId, titulo, contenido);
+        
+        // Crear automáticamente el primer mensaje con el contenido del hilo
+        const mensaje = await mensajeModel.crearMensaje(hilo.id, usuarioId, contenido);
+        
         res.status(201).json(hilo);
     } catch (err) {
         console.error("Error creando hilo:", err);

@@ -32,6 +32,7 @@ async function obtenerHilosPorJuego(juegoId) {
 // Crear nuevo hilo
 async function crearHilo(juegoId, usuarioId, titulo, contenido) {
     try {
+        // INSERT que preserva compatibilidad con esquema existente
         const [result] = await db.query(
             'INSERT INTO hilo (juego_id, usuario_id, titulo, contenido) VALUES (?, ?, ?, ?)',
             [juegoId, usuarioId, titulo, contenido]
@@ -42,7 +43,7 @@ async function crearHilo(juegoId, usuarioId, titulo, contenido) {
             id: result.insertId,
             titulo,
             autor: (await db.query('SELECT username FROM usuario WHERE id = ?', [usuarioId]))[0][0].username,
-            total_mensajes: 0,
+            total_mensajes: 1, // Ahora siempre tendrá al menos 1 mensaje (el del contenido inicial)
             ultimo_mensaje_fecha: null,
             ultimo_usuario: null
         };

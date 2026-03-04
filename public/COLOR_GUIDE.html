@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Visual de Colores - TFG CSS</title>
+    <style>
+        :root {
+            --color-bg-primary: #ffffff;
+            --color-bg-secondary: #f8f9fa;
+            --color-bg-tertiary: #f0f2f5;
+            --color-text-primary: #1a1a1a;
+            --color-text-secondary: #4a4a4a;
+            --color-text-tertiary: #7a7a7a;
+            --color-text-light: #a0a0a0;
+            --color-accent-dark: #0d3b66;
+            --color-accent-light: #2c5aa0;
+            --color-border: #e0e0e0;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--color-bg-secondary);
+            color: var(--color-text-primary);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--color-text-primary);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section h2 {
+            margin-top: 0;
+            color: var(--color-text-primary);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: 1rem;
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .color-box {
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--color-border);
+        }
+        
+        .color-box-dark {
+            color: white;
+        }
+        
+        .color-box-light {
+            color: var(--color-text-primary);
+        }
+        
+        .color-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .color-code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .btn-primary {
+            background: var(--color-accent-light);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--color-accent-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--color-border);
+        }
+        
+        .text-sample {
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Guía Visual de Colores - Proyecto TFG</h1>
+        <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: 2rem;">
+            Paleta minimalista acromática con colores fríos (azules oscuros)
+        </p>
+        
+        <!-- FONDOS -->
+        <div class="section">
+            <h2>Colores de Fondo</h2>
+            <div class="color-grid">
+                <div class="color-box color-box-light" style="background: #ffffff; border: 2px solid #0d3b66;">
+                    <div class="color-name">Principal</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+                <div class="color-box color-box-light" style="background: #f8f9fa;">
+                    <div class="color-name">Secundario</div>
+                    <div class="color-code">#f8f9fa</div>
+                </div>
+                <div class="color-box color-box-light" style="background: #f0f2f5;">
+                    <div class="color-name">Terciario</div>
+                    <div class="color-code">#f0f2f5</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TEXTOS -->
+        <div class="section">
+            <h2>Colores de Texto</h2>
+            <div class="color-grid">
+                <div class="color-box color-box-dark" style="background: #1a1a1a;">
+                    <div class="color-name">Primario</div>
+                    <div class="color-code">#1a1a1a</div>
+                </div>
+                <div class="color-box color-box-dark" style="background: #4a4a4a;">
+                    <div class="color-name">Secundario</div>
+                    <div class="color-code">#4a4a4a</div>
+                </div>
+                <div class="color-box color-box-dark" style="background: #7a7a7a;">
+                    <div class="color-name">Terciario</div>
+                    <div class="color-code">#7a7a7a</div>
+                </div>
+                <div class="color-box color-box-dark" style="background: #a0a0a0;">
+                    <div class="color-name">Claro</div>
+                    <div class="color-code">#a0a0a0</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ACENTOS -->
+        <div class="section">
+            <h2>Colores de Acento (Fríos - Azules Oscuros)</h2>
+            <div class="color-grid">
+                <div class="color-box color-box-dark" style="background: #0d3b66;">
+                    <div class="color-name">Oscuro</div>
+                    <div class="color-code">#0d3b66</div>
+                </div>
+                <div class="color-box color-box-dark" style="background: #2c5aa0;">
+                    <div class="color-name">Claro</div>
+                    <div class="color-code">#2c5aa0</div>
+                </div>
+                <div class="color-box color-box-dark" style="background: #052d52;">
+                    <div class="color-name">Hover</div>
+                    <div class="color-code">#052d52</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- BORDES -->
+        <div class="section">
+            <h2>Colores de Borde</h2>
+            <div class="color-grid">
+                <div class="color-box color-box-light" style="background: #e0e0e0;">
+                    <div class="color-name">Principal</div>
+                    <div class="color-code">#e0e0e0</div>
+                </div>
+                <div class="color-box color-box-light" style="background: #d0d0d0;">
+                    <div class="color-name">Oscuro</div>
+                    <div class="color-code">#d0d0d0</div>
+                </div>
+                <div class="color-box color-box-light" style="background: #f0f0f0;">
+                    <div class="color-name">Claro</div>
+                    <div class="color-code">#f0f0f0</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ESTADOS -->
+        <div class="section">
+            <h2>Colores de Estado</h2>
+            <div class="color-grid">
+                <div class="color-box color-box-light" style="background: #fee; border-left: 4px solid #c1121f;">
+                    <div class="color-name">Error</div>
+                    <div class="color-code">#c1121f</div>
+                </div>
+                <div class="color-box color-box-light" style="background: #efe; border-left: 4px solid #06a77d;">
+                    <div class="color-name">Éxito</div>
+                    <div class="color-code">#06a77d</div>
+                </div>
+                <div class="color-box color-box-light" style="background: #eef; border-left: 4px solid #2c5aa0;">
+                    <div class="color-name">Info</div>
+                    <div class="color-code">#2c5aa0</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DEMO DE COMPONENTES -->
+        <div class="section">
+            <h2>Demo de Componentes</h2>
+            
+            <h3 style="margin-top: 0; color: var(--color-text-secondary);">Botones</h3>
+            <div class="demo-buttons">
+                <button class="btn btn-primary">Botón Primario</button>
+                <button class="btn btn-primary" style="opacity: 0.6; cursor: not-allowed;">Botón Deshabilitado</button>
+                <button class="btn btn-secondary">Botón Secundario</button>
+            </div>
+            
+            <h3 style="color: var(--color-text-secondary);">Texto</h3>
+            <div class="text-sample">
+                <p style="color: var(--color-text-primary); margin: 0; font-size: 1.1rem;"><strong>Texto Primario:</strong> Color oscuro para contenido principal</p>
+                <p style="color: var(--color-text-secondary); margin: 1rem 0 0 0; font-size: 0.95rem;"><strong>Texto Secundario:</strong> Color más claro para contenido secundario</p>
+                <p style="color: var(--color-text-light); margin: 1rem 0 0 0; font-size: 0.9rem;"><strong>Texto Claro:</strong> Para metadata y información secundaria</p>
+            </div>
+            
+            <h3 style="color: var(--color-text-secondary);">Inputs</h3>
+            <input type="text" placeholder="Ejemplo de input" style="padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; font-family: inherit; width: 100%; max-width: 400px;">
+            
+            <h3 style="color: var(--color-text-secondary); margin-top: 1.5rem;">Tarjeta</h3>
+            <div style="background: white; border: 1px solid var(--color-border); border-radius: 8px; padding: 1rem; max-width: 400px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);">
+                <h4 style="margin-top: 0; color: var(--color-accent-light);">Ejemplo de Tarjeta</h4>
+                <p style="color: var(--color-text-secondary); margin: 0;">Esta es una tarjeta de ejemplo usando los estilos del proyecto TFG con bordes suaves y sombra sutil.</p>
+            </div>
+        </div>
+        
+        <!-- CARACTERÍSTICAS -->
+        <div class="section">
+            <h2>Características del Sistema de Diseño</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                <div>
+                    <h4 style="color: var(--color-accent-light); margin-top: 0;">✨ Minimalista</h4>
+                    <p style="color: var(--color-text-secondary); margin: 0;">Diseño limpio sin distracciones visuales innecesarias.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-light); margin-top: 0;">❄️ Colores Fríos</h4>
+                    <p style="color: var(--color-text-secondary); margin: 0;">Paleta acromática con azules oscuros profesionales.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-light); margin-top: 0;">📱 Responsive</h4>
+                    <p style="color: var(--color-text-secondary); margin: 0;">Adapta perfectamente a cualquier tamaño de pantalla.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-light); margin-top: 0;">⚡ Moderno</h4>
+                    <p style="color: var(--color-text-secondary); margin: 0;">Transiciones suaves y animaciones elegantes.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-light); margin-top: 0;">♿ Accesible</h4>
+                    <p style="color: var(--color-text-secondary); margin: 0;">Contraste adecuado para buena legibilidad.</p>
+                </div>
+                <div>
+                    <h4 style="color: var(--color-accent-light); margin-top: 0;">🎨 Consistente</h4>
+                    <p style="color: var(--color-text-secondary); margin: 0;">Variables CSS para mantener coherencia visual.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

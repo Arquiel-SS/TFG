@@ -1,0 +1,346 @@
+/* ============================================
+   ESTILOS FORO - PROYECTO TFG
+   Páginas foro.html e hilo.html
+   ============================================ */
+
+:root {
+    /* Colores principales (acromática) */
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8f9fa;
+    --color-bg-tertiary: #f0f2f5;
+    
+    /* Tonos grises fríos */
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #4a4a4a;
+    --color-text-tertiary: #7a7a7a;
+    --color-text-light: #a0a0a0;
+    
+    /* Azules muy oscuros (fríos) */
+    --color-accent-dark: #0d3b66;
+    --color-accent-light: #2c5aa0;
+    --color-accent-hover: #052d52;
+    
+    /* Bordes y separadores */
+    --color-border: #e0e0e0;
+    
+    /* Sombras sutiles */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+    
+    /* Espaciado */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+    
+    /* Tipografía */
+    --font-main: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    
+    /* Border radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+}
+
+/* === RESET GLOBAL === */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: var(--spacing-lg);
+    font-family: var(--font-main);
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* === TIPOGRAFÍA === */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    color: var(--color-text-primary);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--color-border);
+}
+
+h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+}
+
+h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-sm);
+}
+
+p {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--color-text-secondary);
+}
+
+/* === CONTENEDOR === */
+body > div {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* === HILOS CARD === */
+.hilo-card {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hilo-card:hover {
+    border-color: var(--color-accent-light);
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
+}
+
+.hilo-card h3 {
+    margin-top: 0;
+    color: var(--color-accent-light);
+}
+
+.hilo-card p {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+}
+
+.hilo-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* === MENSAJES === */
+.mensaje {
+    background: var(--color-bg-primary);
+    border-left: 4px solid var(--color-accent-light);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.mensaje strong {
+    display: block;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.mensaje small {
+    display: block;
+    color: var(--color-text-light);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.mensaje p {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+.mensaje button {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: all 0.2s ease;
+    margin-top: var(--spacing-md);
+}
+
+.mensaje button:hover {
+    background: var(--color-border);
+    border-color: var(--color-accent-light);
+}
+
+/* === INPUTS Y TEXTAREAS === */
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    font-size: var(--font-size-base);
+    font-family: var(--font-main);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: all 0.2s ease;
+    margin-bottom: var(--spacing-md);
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: var(--color-text-light);
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-accent-light);
+    box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+    background: var(--color-bg-secondary);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+/* === BOTONES === */
+button {
+    background: var(--color-accent-light);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-sm);
+    margin-right: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+button:hover {
+    background: var(--color-accent-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* === SEPARADORES === */
+hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--spacing-lg) 0;
+}
+
+/* === LISTA DE HILOS === */
+#listaHilos {
+    display: grid;
+    gap: var(--spacing-md);
+}
+
+/* === CONTENEDOR DE HILOS === */
+#hiloContainer {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* === RESPUESTA INPUT === */
+#respuestaInput {
+    width: 100%;
+    min-height: 100px;
+}
+
+#btnResponder {
+    display: inline-block;
+    margin-top: var(--spacing-md);
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-md);
+    }
+
+    h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    h2 {
+        font-size: var(--font-size-lg);
+    }
+
+    .hilo-card {
+        padding: var(--spacing-md);
+    }
+
+    .mensaje {
+        padding: var(--spacing-md);
+    }
+
+    input[type="text"],
+    textarea {
+        font-size: 16px; /* Previene zoom en iOS */
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: var(--spacing-sm);
+    }
+
+    h1 {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-md);
+    }
+
+    .hilo-card {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .mensaje {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+        border-left-width: 3px;
+    }
+
+    button {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    #btnResponder {
+        margin-top: var(--spacing-sm);
+    }
+}
