@@ -209,6 +209,37 @@ function mostrarJuego(juego) {
     gameForo.classList.add('hidden');
 }
 
+// Detectar mientras escribe
+document.getElementById("barraBusqueda").addEventListener("input", async (e) => {
+    const query = e.target.value.trim();
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await fetch(`/api/juegos/search?q=${encodeURIComponent(query)}`, {
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        const juegosFiltrados = await res.json();
+
+        catalogoCarrusel.innerHTML = "";
+        juegosFiltrados.forEach(juego => {
+            const item = document.createElement("div");
+            item.className = 'gameItem';
+
+            const img = document.createElement('img');
+            img.src = juego.portada_url || 'https://via.placeholder.com/150x200?text=Sin+Portada';
+            img.alt = juego.titulo;
+            img.title = juego.titulo;
+            img.addEventListener('click', () => mostrarJuego(juego));
+
+            item.appendChild(img);
+            catalogoCarrusel.appendChild(item);
+        });
+    } catch (err) {
+        console.error("Error en la búsqueda:", err);
+    }
+});
+
 // ================= ===== FORO ===== =================
 
 // Mostrar formulario de nuevo hilo

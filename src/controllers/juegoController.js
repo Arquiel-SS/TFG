@@ -43,3 +43,14 @@ exports.quitarFavorito = async (req, res) => {
         res.status(500).json({ error: "Error quitando favorito" });
     }
 };
+
+exports.buscarJuegos = async (req, res) => {
+    try {
+        const term = req.query.q || "";
+        const resultados = await juegoModel.buscarPorTitulo(term);
+        res.json(resultados);
+    } catch (error) {
+        console.error("Error en búsqueda:", error);
+        res.status(500).json({ error: "Error al buscar juegos" });
+    }
+};

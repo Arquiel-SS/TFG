@@ -10,11 +10,11 @@ router.get('/', authMiddleware, juegoController.obtenerJuegos);
 // Obtener juegos favoritos
 router.get('/favoritos', authMiddleware, juegoController.obtenerFavoritos);
 
-// Valorar juego
-router.post('/:id/rating', authMiddleware, juegoController.valorarJuego);
-
 // Favoritos (añadir/quitar)
 router.post('/:id/favorito', authMiddleware, juegoController.marcarFavorito);
 router.delete('/:id/favorito', authMiddleware, juegoController.quitarFavorito);
+
+// /src/routes/juegoRoutes.js
+router.get('/search', authMiddleware, juegoController.buscarJuegos);
 
 module.exports = router;

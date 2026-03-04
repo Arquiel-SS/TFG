@@ -58,3 +58,13 @@ exports.quitarFavorito = async (usuarioId, juegoId) => {
         [usuarioId, juegoId]
     );
 };
+
+exports.buscarPorTitulo = async (term) => {
+    const searchValue = `%${term}%`;
+    const [rows] = await pool.query(
+        `SELECT * FROM juego
+        WHERE titulo LIKE ?`,
+        [searchValue]
+    );
+    return rows;
+};
