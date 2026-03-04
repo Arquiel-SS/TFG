@@ -10,9 +10,11 @@
 <!-- ================= NAVBAR FIJA ================= -->
 <nav class="navbar">
     <div class="nav-center">
-        <select id="selectorVista">
-            <option value="buscar">Buscar juegos</option>
-            <option value="favoritos">Juegos favoritos</option>
+
+        <!-- Selector vista catálogo / favoritos -->
+        <select id="selectorVistaCat">
+            <option value="todos">Ver todos</option>
+            <option value="favoritos">Mis favoritos</option>
         </select>
 
         <select id="selectorGenero">
@@ -47,13 +49,12 @@
     <!-- VISTA CATÁLOGO -->
     <section id="vistaCatalogo">
         <h2 id="tituloSeccion">Buscar Juegos</h2>
-        <div id="catalogoCarrusel" class="carrusel">
-            <!-- Solo portadas -->
-        </div>
+        <div id="catalogoCarrusel" class="carrusel"></div>
     </section>
 
     <!-- VISTA JUEGO ACTIVO -->
     <section id="vistaJuego" class="hidden">
+
         <!-- Tabs internas -->
         <div class="gameTabs">
             <button id="subTabInfo" class="gameTab active">Información</button>
@@ -61,7 +62,11 @@
         </div>
 
         <div id="gameContent">
+
+            <!-- ---------------- INFO JUEGO ---------------- -->
             <section id="gameInfo"></section>
+
+            <!-- ---------------- FORO ---------------- -->
             <section id="gameForo" class="hidden">
 
                 <!-- Vista lista de hilos -->
@@ -93,6 +98,7 @@
                 </div>
 
             </section>
+
         </div>
 
         <button id="volverCatalogo" class="volverBtn">← Volver al catálogo</button>
