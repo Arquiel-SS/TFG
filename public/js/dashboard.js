@@ -299,6 +299,23 @@ subTabForo.addEventListener("click", async () => {
     await cargarHilos();
 });
 
+// --- Tab Info: mostrar info y ocultar foro ---
+subTabInfo.addEventListener("click", () => {
+    subTabInfo.classList.add("active");
+    subTabForo.classList.remove("active");
+
+    // Mostrar sección de información
+    gameInfo.classList.remove("hidden");
+
+    // Ocultar sección de foro y cualquier sub-sección
+    gameForo.classList.add("hidden");
+    foroCrear.classList.add("hidden");
+    foroDetalle.classList.add("hidden");
+
+    // Reiniciar lista de hilos
+    listaHilos.innerHTML = "";
+});
+
 // Guardar hilo y recargar lista
 guardarHiloBtn.addEventListener("click", async () => {
     const token = localStorage.getItem("token");
