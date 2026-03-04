@@ -156,6 +156,7 @@ async function cargarUsuario() {
 
 // ================= FORO =================
 // -------- CREAR HILO (mostrar formulario) --------
+// -------- CREAR HILO (mostrar formulario) --------
 crearHiloBtn.addEventListener("click", () => {
     // Oculta la lista de hilos
     listaHilos.classList.add("hidden");
@@ -175,10 +176,11 @@ cancelarHiloBtn.addEventListener("click", () => {
     listaHilos.classList.remove("hidden");
 });
 
-// Guardar hilo
+// Guardar hilo + refrescar lista automáticamente
 guardarHiloBtn.addEventListener("click", async () => {
     const token = localStorage.getItem("token");
 
+    // Validación básica
     if (!tituloHiloInput.value.trim() || !contenidoHiloInput.value.trim()) {
         return alert("Debes completar título y contenido.");
     }
@@ -198,16 +200,25 @@ guardarHiloBtn.addEventListener("click", async () => {
 
         const data = await res.json();
 
+        // Si hay error lo mostramos
         if (!res.ok) {
             console.error("Error al crear hilo:", data);
             return alert("Error al crear hilo: " + (data.error || res.statusText));
         }
 
-        // Una vez creado, volver a la lista del foro y recargar
-        foroCrear.classList.add("hidden");
-        foroLista.classList.remove("hidden");
+        // YA se ha creado el hilo con éxito
 
-        // Refrescar hilos
+        // 👇 Ocultamos formulario
+        foroCrear.classList.add("hidden");
+
+        // 👇 Limpiamos formulario de nuevo
+        tituloHiloInput.value = "";
+        contenidoHiloInput.value = "";
+
+        // 👇 Mostramos la lista de hilos
+        listaHilos.classList.remove("hidden");
+
+        // 👇 Recargamos todos los hilos desde la API
         await cargarHilos();
 
     } catch (err) {
