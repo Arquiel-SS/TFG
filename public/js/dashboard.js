@@ -202,21 +202,6 @@ function mostrarJuego(juego) {
         }
     });
 
-    // Valorar juego
-    document.getElementById("btnValorar").addEventListener("click", async () => {
-        const puntuacion = document.getElementById("ratingSelect").value;
-        const token = localStorage.getItem("token");
-        await fetch(`/api/juegos/${juegoActual.id}/rating`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({ puntuacion: +puntuacion })
-        });
-        alert("Valoración enviada: " + puntuacion);
-    });
-
     // Ajuste de tabs
     subTabInfo.classList.add('active');
     subTabForo.classList.remove('active');
