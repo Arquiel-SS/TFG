@@ -172,6 +172,9 @@ function mostrarJuego(juego) {
         <p><strong>Desarrollador:</strong> ${juego.desarrollador}</p>
         <p><strong>Fecha de lanzamiento:</strong> ${juego.fecha_lanzamiento}</p>
         <p>${juego.descripcion || ""}</p>
+
+        <!-- Favorito -->
+        <button id="btnFavorito">💖 Favorito</button>
     `;
 
     // Toggle favorito
@@ -197,6 +200,21 @@ function mostrarJuego(juego) {
             });
             alert("Juego añadido a favoritos");
         }
+    });
+
+    // Valorar juego
+    document.getElementById("btnValorar").addEventListener("click", async () => {
+        const puntuacion = document.getElementById("ratingSelect").value;
+        const token = localStorage.getItem("token");
+        await fetch(`/api/juegos/${juegoActual.id}/rating`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({ puntuacion: +puntuacion })
+        });
+        alert("Valoración enviada: " + puntuacion);
     });
 
     // Ajuste de tabs
