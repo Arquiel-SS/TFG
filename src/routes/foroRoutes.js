@@ -1,4 +1,3 @@
-// src/routes/foroRoutes.js
 const express = require('express');
 const router = express.Router();
 
@@ -7,20 +6,28 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 router.use(authMiddleware);
 
-// === HILOS ===
-
-// Obtener hilos de un juego
+/**
+ * GET /api/foro/juegos/:juegoId/hilos
+ * Lista todos los hilos de un juego específico
+ */
 router.get('/juegos/:juegoId/hilos', foroController.listarHilos);
 
-// Crear hilo nuevo
+/**
+ * POST /api/foro/juegos/:juegoId/hilos
+ * Crea un nuevo hilo en un juego (requiere autenticación)
+ */
 router.post('/juegos/:juegoId/hilos', foroController.crearHilo);
 
-// === MENSAJES ===
-
-// Obtener mensajes de un hilo
+/**
+ * GET /api/foro/hilos/:hiloId/mensajes
+ * Obtiene todos los mensajes de un hilo específico
+ */
 router.get('/hilos/:hiloId/mensajes', foroController.listarMensajes);
 
-// Crear mensaje en hilo
+/**
+ * POST /api/foro/hilos/:hiloId/mensajes
+ * Crea un nuevo mensaje en un hilo (requiere autenticación)
+ */
 router.post('/hilos/:hiloId/mensajes', foroController.crearMensaje);
 
 module.exports = router;

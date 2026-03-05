@@ -1,19 +1,21 @@
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Formatea una fecha al formato DD/MM/YYYY o YYYY-MM-DD HH:mm:ss
+ * @param {string|Date} fecha - Fecha a formatear
+ * @returns {string} Fecha formateada o cadena vacía
+ */
+function formatearFecha(fecha) {
+    if (!fecha) return "";
+    const f = new Date(fecha);
+    return f.toLocaleString();
+}
 
-    if (document.getElementById("listaHilos")) {
-        cargarHilos();
-    }
-
-    if (document.getElementById("hiloContainer")) {
-        cargarHiloIndividual();
-    }
-
-});
-
+/**
+ * Carga la lista de hilos desde el servidor
+ */
 async function cargarHilos() {
     try {
         const params = new URLSearchParams(window.location.search);
-        const juegoId = params.get("juegoId"); // Asegúrate de pasar juegoId en la URL
+        const juegoId = params.get("juegoId");
         const res = await fetch(`/api/foro/${juegoId}`);
         const hilos = await res.json();
 
@@ -48,8 +50,10 @@ async function cargarHilos() {
     }
 }
 
+/**
+ * Carga un hilo individual con todos sus mensajes
+ */
 async function cargarHiloIndividual() {
-
     const params = new URLSearchParams(window.location.search);
     const hiloId = params.get("id");
 
@@ -65,14 +69,12 @@ async function cargarHiloIndividual() {
         const contenedor = document.getElementById("hiloContainer");
         contenedor.innerHTML = "";
 
-        // Cabecera del hilo
         if (mensajes.length > 0) {
             const titulo = document.createElement("h2");
             titulo.textContent = mensajes[0].hilo_titulo || "Hilo";
             contenedor.appendChild(titulo);
         }
 
-        // Mensajes
         mensajes.forEach(mensaje => {
             const div = document.createElement("div");
             div.classList.add("mensaje");
@@ -89,15 +91,17 @@ async function cargarHiloIndividual() {
             contenedor.appendChild(div);
         });
 
-        // Responder
-        document.getElementById("btnResponder")
-            .addEventListener("click", () => enviarRespuesta(hiloId));
-
+        document.getElementById("btnResponder").addEventListener("click", () => enviarRespuesta(hiloId));
     } catch (err) {
         console.error("Error cargando hilo individual:", err);
     }
 }
 
+/**
+ * Aumenta el contador de likes de un mensaje
+ * @param {number} id - ID del mensaje
+ * @param {HTMLElement} boton - Elemento botón que contiene el contador
+ */
 async function darLike(id, boton) {
     try {
         const res = await fetch(`/api/mensaje/${id}/like`, { method: "POST" });
@@ -108,6 +112,10 @@ async function darLike(id, boton) {
     }
 }
 
+/**
+ * Envía una respuesta a un hilo
+ * @param {number} hiloId - ID del hilo donde enviar la respuesta
+ */
 async function enviarRespuesta(hiloId) {
     const contenido = document.getElementById("respuestaInput").value;
     if (!contenido.trim()) return;
@@ -125,8 +133,15 @@ async function enviarRespuesta(hiloId) {
     }
 }
 
-function formatearFecha(fecha) {
-    if (!fecha) return "";
-    const f = new Date(fecha);
-    return f.toLocaleString();
-}
+/**
+ * Inicializa la aplicación al cargar el DOM
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("listaHilos")) {
+        cargarHilos();
+    }
+
+    if (document.getElementById("hiloContainer")) {
+        cargarHiloIndividual();
+    }
+});

@@ -1,10 +1,19 @@
 const pool = require('../db/connection');
 
+/**
+ * Obtiene todos los juegos ordenados por fecha de creación descendente
+ * @returns {Promise<Array>} Array de todos los juegos
+ */
 exports.obtenerTodos = async () => {
     const [rows] = await pool.query("SELECT * FROM juego ORDER BY created_at DESC");
     return rows;
 };
 
+/**
+ * Obtiene la calificación promedio y total de valoraciones de un juego
+ * @param {number} juegoId - ID del juego
+ * @returns {Promise<Object>} Objeto con rating y total de valoraciones
+ */
 exports.obtenerRatingPorJuego = async (juegoId) => {
     const [rows] = await pool.query(`
         SELECT IFNULL(AVG(puntuacion), 0) AS rating,
@@ -12,11 +21,14 @@ exports.obtenerRatingPorJuego = async (juegoId) => {
         FROM valoracion
         WHERE juego_id = ?
     `, [juegoId]);
-
     return rows[0];
 };
 
-// Obtener calificación media y total de valoración
+/**
+ * Obtiene la calificación promedio de un juego
+ * @param {number} juegoId - ID del juego
+ * @returns {Promise<Object>} Objeto con promedio y total
+ */
 exports.obtenerRating = async (juegoId) => {
     const [rows] = await pool.query(
         `SELECT 
@@ -29,7 +41,11 @@ exports.obtenerRating = async (juegoId) => {
     return rows[0];
 };
 
-// Obtener juegos favoritos de un usuario
+/**
+ * Obtiene los juegos favoritos de un usuario
+ * @param {number} usuarioId - ID del usuario
+ * @returns {Promise<Array>} Array de juegos favoritos
+ */
 exports.obtenerFavoritosPorUsuario = async (usuarioId) => {
     const [rows] = await pool.query(
         `SELECT j.*
@@ -41,7 +57,12 @@ exports.obtenerFavoritosPorUsuario = async (usuarioId) => {
     return rows;
 };
 
-// Marcar favorito
+/**
+ * Marca un juego como favorito de un usuario
+ * @param {number} usuarioId - ID del usuario
+ * @param {number} juegoId - ID del juego
+ * @returns {Promise<Object>} Resultado de la inserción
+ */
 exports.marcarFavorito = async (usuarioId, juegoId) => {
     return await pool.query(
         `INSERT INTO favorito (usuario_id, juego_id)
@@ -50,7 +71,12 @@ exports.marcarFavorito = async (usuarioId, juegoId) => {
     );
 };
 
-// Quitar favorito
+/**
+ * Quita un juego de los favoritos de un usuario
+ * @param {number} usuarioId - ID del usuario
+ * @param {number} juegoId - ID del juego
+ * @returns {Promise<Object>} Resultado de la eliminación
+ */
 exports.quitarFavorito = async (usuarioId, juegoId) => {
     return await pool.query(
         `DELETE FROM favorito
@@ -59,6 +85,11 @@ exports.quitarFavorito = async (usuarioId, juegoId) => {
     );
 };
 
+/**
+ * Busca juegos por término en el título
+ * @param {string} term - Término de búsqueda
+ * @returns {Promise<Array>} Array de juegos que coinciden
+ */
 exports.buscarPorTitulo = async (term) => {
     const searchValue = `%${term}%`;
     const [rows] = await pool.query(

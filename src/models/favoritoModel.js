@@ -1,7 +1,11 @@
-// src/models/favoritoModel.js
 const pool = require('../db/connection');
 
 const Favorito = {
+    /**
+     * Añade un juego a los favoritos de un usuario
+     * @param {number} usuarioId - ID del usuario
+     * @param {number} juegoId - ID del juego
+     */
     async agregar(usuarioId, juegoId) {
         try {
             await pool.query(
@@ -14,6 +18,11 @@ const Favorito = {
         }
     },
 
+    /**
+     * Elimina un juego de los favoritos de un usuario
+     * @param {number} usuarioId - ID del usuario
+     * @param {number} juegoId - ID del juego
+     */
     async eliminar(usuarioId, juegoId) {
         try {
             await pool.query(
@@ -25,6 +34,11 @@ const Favorito = {
         }
     },
 
+    /**
+     * Obtiene todos los favoritos de un usuario
+     * @param {number} usuarioId - ID del usuario
+     * @returns {Promise<Array>} Array de juegos favoritos
+     */
     async obtenerFavoritos(usuarioId) {
         const [rows] = await pool.query(
             `SELECT j.* FROM favorito f
@@ -35,6 +49,12 @@ const Favorito = {
         return rows;
     },
 
+    /**
+     * Verifica si un juego es favorito de un usuario
+     * @param {number} usuarioId - ID del usuario
+     * @param {number} juegoId - ID del juego
+     * @returns {Promise<boolean>} True si es favorito, false si no
+     */
     async esFavorito(usuarioId, juegoId) {
         const [rows] = await pool.query(
             `SELECT 1 FROM favorito WHERE usuario_id = ? AND juego_id = ?`,

@@ -2,9 +2,12 @@
 const hiloModel = require('../models/hiloModel');
 const mensajeModel = require('../models/mensajeModel');
 
-// ================= HILOS =================
-
-// Listar hilos de un juego
+/**
+ * Lista todos los hilos de un juego específico
+ * @param {Object} req - Express request object
+ * @param {string} req.params.juegoId - ID del juego
+ * @param {Object} res - Express response object
+ */
 exports.listarHilos = async (req, res) => {
     const juegoId = req.params.juegoId;
 
@@ -17,7 +20,16 @@ exports.listarHilos = async (req, res) => {
     }
 };
 
-// Crear hilo nuevo
+/**
+ * Crea un nuevo hilo en un juego con su primer mensaje
+ * @param {Object} req - Express request object
+ * @param {string} req.params.juegoId - ID del juego
+ * @param {Object} req.body - Request body
+ * @param {string} req.body.titulo - Título del hilo
+ * @param {string} req.body.contenido - Contenido del primer mensaje
+ * @param {Object} req.usuario - Usuario autenticado
+ * @param {Object} res - Express response object
+ */
 exports.crearHilo = async (req, res) => {
     const juegoId = req.params.juegoId;
     const usuarioId = req.usuario.id;
@@ -28,12 +40,8 @@ exports.crearHilo = async (req, res) => {
     }
 
     try {
-        // Crear el hilo
         const hilo = await hiloModel.crearHilo(juegoId, usuarioId, titulo, contenido);
-        
-        // Crear automáticamente el primer mensaje con el contenido del hilo
         const mensaje = await mensajeModel.crearMensaje(hilo.id, usuarioId, contenido);
-        
         res.status(201).json(hilo);
     } catch (err) {
         console.error("Error creando hilo:", err);
@@ -41,9 +49,12 @@ exports.crearHilo = async (req, res) => {
     }
 };
 
-// ================= MENSAJES =================
-
-// Listar mensajes de un hilo
+/**
+ * Lista todos los mensajes de un hilo específico
+ * @param {Object} req - Express request object
+ * @param {string} req.params.hiloId - ID del hilo
+ * @param {Object} res - Express response object
+ */
 exports.listarMensajes = async (req, res) => {
     const hiloId = req.params.hiloId;
 
@@ -56,7 +67,15 @@ exports.listarMensajes = async (req, res) => {
     }
 };
 
-// Crear mensaje en hilo
+/**
+ * Crea un nuevo mensaje dentro de un hilo
+ * @param {Object} req - Express request object
+ * @param {string} req.params.hiloId - ID del hilo
+ * @param {Object} req.body - Request body
+ * @param {string} req.body.contenido - Contenido del mensaje
+ * @param {Object} req.usuario - Usuario autenticado
+ * @param {Object} res - Express response object
+ */
 exports.crearMensaje = async (req, res) => {
     const hiloId = req.params.hiloId;
     const usuarioId = req.usuario.id;

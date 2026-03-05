@@ -1,5 +1,9 @@
 const mysql = require('mysql2/promise');
 
+/**
+ * Pool de conexiones MySQL
+ * Configurado para manejar múltiples conexiones concurrentes
+ */
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'main',

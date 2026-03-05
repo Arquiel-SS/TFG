@@ -1,7 +1,11 @@
 // src/models/hiloModel.js
 const db = require('../db/connection');
 
-// Obtener hilos por juego
+/**
+ * Obtiene todos los hilos de un juego específico
+ * @param {number} juegoId - ID del juego
+ * @returns {Promise<Array>} Array de hilos con metadatos
+ */
 async function obtenerHilosPorJuego(juegoId) {
     try {
         const [rows] = await db.query(
@@ -24,31 +28,39 @@ async function obtenerHilosPorJuego(juegoId) {
         );
         return Array.isArray(rows) ? rows : [];
     } catch (err) {
-        console.error("Error en modelo obtenerHilosPorJuego:", err);
+        console.error("Error en obtenerHilosPorJuego:", err);
         return [];
     }
 }
 
-// Crear nuevo hilo
+/**
+ * Crea un nuevo hilo
+ * @param {number} juegoId - ID del juego
+ * @param {number} usuarioId - ID del usuario creador
+ * @param {string} titulo - Título del hilo
+ * @param {string} contenido - Contenido inicial (se guardará en BD)
+ * @returns {Promise<Object>} Objeto hilo creado
+ */
 async function crearHilo(juegoId, usuarioId, titulo, contenido) {
     try {
-        // INSERT que preserva compatibilidad con esquema existente
         const [result] = await db.query(
             'INSERT INTO hilo (juego_id, usuario_id, titulo, contenido) VALUES (?, ?, ?, ?)',
             [juegoId, usuarioId, titulo, contenido]
         );
 
-        // Devolver objeto compatible con dashboard.js
+        const usuarioRow = await db.query('SELECT username FROM usuario WHERE id = ?', [usuarioId]);
+        const username = usuarioRow[0][0]?.username || "Desconocido";
+
         return {
             id: result.insertId,
             titulo,
-            autor: (await db.query('SELECT username FROM usuario WHERE id = ?', [usuarioId]))[0][0].username,
-            total_mensajes: 1, // Ahora siempre tendrá al menos 1 mensaje (el del contenido inicial)
+            autor: username,
+            total_mensajes: 1,
             ultimo_mensaje_fecha: null,
             ultimo_usuario: null
         };
     } catch (err) {
-        console.error("Error en modelo crearHilo:", err);
+        console.error("Error en crearHilo:", err);
         throw err;
     }
 }

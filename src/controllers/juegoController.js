@@ -1,7 +1,11 @@
 const juegoModel = require('../models/juegoModel');
 const Favorito = require('../models/favoritoModel');
 
-// Obtener todos los juegos
+/**
+ * Obtiene todos los juegos del catálogo
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
 exports.obtenerJuegos = async (req, res) => {
     try {
         const juegos = await juegoModel.obtenerTodos();
@@ -11,7 +15,12 @@ exports.obtenerJuegos = async (req, res) => {
     }
 };
 
-// Obtener favoritos del usuario
+/**
+ * Obtiene los juegos favoritos del usuario autenticado
+ * @param {Object} req - Express request object
+ * @param {Object} req.usuario - Usuario autenticado
+ * @param {Object} res - Express response object
+ */
 exports.obtenerFavoritos = async (req, res) => {
     const usuarioId = req.usuario.id;
     try {
@@ -22,6 +31,13 @@ exports.obtenerFavoritos = async (req, res) => {
     }
 };
 
+/**
+ * Añade un juego a favoritos del usuario
+ * @param {Object} req - Express request object
+ * @param {string} req.params.id - ID del juego
+ * @param {Object} req.usuario - Usuario autenticado
+ * @param {Object} res - Express response object
+ */
 exports.marcarFavorito = async (req, res) => {
     const usuarioId = req.usuario.id;
     const juegoId = req.params.id;
@@ -33,6 +49,13 @@ exports.marcarFavorito = async (req, res) => {
     }
 };
 
+/**
+ * Elimina un juego de los favoritos del usuario
+ * @param {Object} req - Express request object
+ * @param {string} req.params.id - ID del juego
+ * @param {Object} req.usuario - Usuario autenticado
+ * @param {Object} res - Express response object
+ */
 exports.quitarFavorito = async (req, res) => {
     const usuarioId = req.usuario.id;
     const juegoId = req.params.id;
@@ -44,6 +67,12 @@ exports.quitarFavorito = async (req, res) => {
     }
 };
 
+/**
+ * Busca juegos por término en el título
+ * @param {Object} req - Express request object
+ * @param {string} req.query.q - Término de búsqueda
+ * @param {Object} res - Express response object
+ */
 exports.buscarJuegos = async (req, res) => {
     try {
         const term = req.query.q || "";
